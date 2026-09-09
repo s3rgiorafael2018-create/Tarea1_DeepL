@@ -1,0 +1,10 @@
+# Table of contents
+# Learn more at https://jupyterbook.org/customize/toc.html
+
+format: jb-book
+root: notebooks/01_eda
+chapters:
+- file: notebooks/01_eda
+  title: "1. Análisis Exploratorio de Datos (EDA)"
+- file: notebooks
+- file: markdown-notebooks

@@ -1,0 +1,14 @@
+{
+  "iteracion": 5,
+  "hidden_layer_sizes": "(100, 50)",
+  "alpha": 0.0001,
+  "max_iter": 50,
+  "accuracy": 0.8336802289511077,
+  "precision": 0.5827225130890052,
+  "recall": 0.0657141170219047,
+  "f1_score": 0.11810898286199395,
+  "roc_auc": 0.7346225463864344,
+  "train_time_seg": 106.77076530456543,
+  "predict_time_seg": 0.4557499885559082,
+  "modelo_path": "../checkpoints/mlp_gridsearch\\mlp_iter5.pkl"
+}
