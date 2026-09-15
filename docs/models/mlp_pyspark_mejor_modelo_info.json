@@ -1,0 +1,14 @@
+{
+  "iteracion": 6,
+  "layers": "[382, 50, 2]",
+  "stepSize": 0.1,
+  "maxIter": 200,
+  "accuracy": 0.8328584252811813,
+  "precision": 0.5773647153490243,
+  "recall": 0.0523582444605791,
+  "f1_score": 0.0960098482618353,
+  "roc_auc": 0.7251960963996075,
+  "train_time_seg": 13899.288702964785,
+  "predict_time_seg": 21.611717224121094,
+  "modelo_path": "../checkpoints/pyspark\\mlp_model_iter6"
+}
