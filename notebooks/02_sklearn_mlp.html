@@ -1,0 +1,1619 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Modelado con Scikit-Learn &#8212; Predicción de Clicks en Publicidad Móvil</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/02_sklearn_mlp';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Modelado con Pyspark" href="03_Pyspark.html" />
+    <link rel="prev" title="Introducción al Proyecto: Predicción de Tasa de Clics (CTR) en Publicidad Móvil" href="01_eda.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="01_eda.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logoUN.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/logoUN.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="01_eda.html">
+                    Introducción al Proyecto: Predicción de Tasa de Clics (CTR) en Publicidad Móvil
+                </a>
+            </li>
+        </ul>
+        <ul class="current nav bd-sidenav">
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">2. Modelado con Scikit-Learn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_Pyspark.html">Modelado con Pyspark</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="04_Comparaci%C3%B3n.html">Comparación de resultados</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/s3rgiorafael2018-create/Tarea1_DeepL" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/s3rgiorafael2018-create/Tarea1_DeepL/issues/new?title=Issue%20on%20page%20%2Fnotebooks/02_sklearn_mlp.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/02_sklearn_mlp.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Modelado con Scikit-Learn</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-de-datos">Carga de Datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ingenieria-de-caracteristicas-temporales">Ingeniería de características temporales</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#muestreo-de-los-datos">Muestreo de los datos</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#informacion-del-dataset-resultante">Información del dataset resultante</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocesamiento">Preprocesamiento</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seleccion-de-variables-relevantes">Selección de variables relevantes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#division-de-train-test-estratificada">Division de train/test estratificada</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#codificacion-escalado">Codificación + escalado</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-entrenamiento">Definición del entrenamiento</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proceso-de-entrenamiento"><strong>Proceso de entrenamiento</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-de-resultados-del-entrenamiento">Tabla de resultados del entrenamiento</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matriz-de-confusion">Matriz de confusión</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#curva-roc">Curva ROC</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretabilidad-con-lime">Interpretabilidad con LIME</a></li>
+</ul>
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="modelado-con-scikit-learn">
+<h1>Modelado con Scikit-Learn<a class="headerlink" href="#modelado-con-scikit-learn" title="Permalink to this heading">#</a></h1>
+<p>En esta sección se desarrolla el modelo de clasificación mediante una red neuronal
+multicapa (MLP) utilizando Scikit-Learn.</p>
+<p>Debido al gran tamaño del dataset Avazu, que contiene aproximadamente 40 millones
+de registros, no es conveniente utilizar todo el conjunto de datos directamente con
+Scikit-Learn. Por esta razón, inicialmente se utiliza <strong>PySpark para cargar y
+procesar el dataset</strong>, y posteriormente se selecciona una muestra representativa
+de aproximadamente 1 millón de observaciones.</p>
+<p>El flujo general del proceso es:</p>
+<p><strong>Dataset completo → PySpark → Muestreo → Pandas → Preprocesamiento → MLP → Evaluación</strong></p>
+<p>El objetivo es construir un modelo capaz de predecir la variable click, donde:</p>
+<ul class="simple">
+<li><p>0: el usuario no hizo clic en el anuncio.</p></li>
+<li><p>1: el usuario hizo clic en el anuncio.</p></li>
+</ul>
+<section id="carga-de-datos">
+<h2>Carga de Datos<a class="headerlink" href="#carga-de-datos" title="Permalink to this heading">#</a></h2>
+<p>En primer lugar, se crea una sesión de PySpark para realizar la lectura del dataset. Esta decisión se toma debido al tamaño considerable de los datos, ya que el conjunto de entrenamiento contiene más de 40 millones de registros. Además, PySpark permite realizar operaciones sobre grandes volúmenes de datos de manera más eficiente que cargar directamente todo el archivo en memoria mediante Pandas. Primeramente, se configuran algunos parámetros de memoria y particionamiento para facilitar el procesamiento local del dataset. Posteriormente, se leen los archivos “train.csv” y “test.csv”, utilizando la primera fila como encabezado e intentando inferir automáticamente los tipos de datos de cada variable.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+
+<span class="c1"># Carga del Dataset </span>
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span> \
+    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;Avazu_EDA&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.driver.memory&quot;</span><span class="p">,</span> <span class="s2">&quot;16g&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.executor.memory&quot;</span><span class="p">,</span> <span class="s2">&quot;16g&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.driver.maxResultSize&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.sql.shuffle.partitions&quot;</span><span class="p">,</span> <span class="s2">&quot;32&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="n">df_train</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;csv&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;inferSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;../data/train.csv&quot;</span><span class="p">)</span>
+<span class="n">df_test</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;csv&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;inferSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;../data/test.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="ingenieria-de-caracteristicas-temporales">
+<h2>Ingeniería de características temporales<a class="headerlink" href="#ingenieria-de-caracteristicas-temporales" title="Permalink to this heading">#</a></h2>
+<p>La variable “hour” contiene la fecha y hora de la impresión del anuncio en un formato codificado. Para facilitar su utilización en el modelo, esta variable se transforma en características temporales más interpretables.
+Se crean tres nuevas variables:</p>
+<ul class="simple">
+<li><p>day: día del mes correspondiente a la impresión.</p></li>
+<li><p>hour_of_day: hora del día en la que ocurrió la impresión.</p></li>
+<li><p>franja_horaria: agrupación de la hora en cuatro periodos del día.</p></li>
+</ul>
+<p>La variable franja_horaria clasifica las observaciones de la siguiente manera:</p>
+<ul class="simple">
+<li><p>00:00–05:59 = Madrugada</p></li>
+<li><p>06:00–11:59 = Mañana</p></li>
+<li><p>12:00–17:59 = Tarde</p></li>
+<li><p>18:00–23:59 = Noche</p></li>
+</ul>
+<p>Esta transformación permite representar la información temporal de una forma más útil para el modelo, ya que la hora puede estar relacionada con el comportamiento del usuario y, por tanto, con la probabilidad de hacer clic en un anuncio.</p>
+<p>Además, las mismas transformaciones realizadas sobre el conjunto de entrenamiento se aplican al conjunto de prueba. Esto es necesario para que ambos conjuntos tengan una estructura equivalente y puedan ser procesados posteriormente por el mismo esquema de preprocesamiento.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyspark.sql.functions</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="c1"># 1. Convertir &#39;hour&#39; a String para extracción de caracteres</span>
+<span class="n">df_train_1</span> <span class="o">=</span> <span class="n">df_train</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;hour_str&quot;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">))</span>
+
+<span class="c1"># 2. Extraer día, hora del día y construir la franja horaria directamente</span>
+<span class="n">df_transformed</span> <span class="o">=</span> <span class="n">df_train_1</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;day&quot;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="s2">&quot;hour_str&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="s2">&quot;hour_str&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span>
+        <span class="s2">&quot;franja_horaria&quot;</span><span class="p">,</span>
+        <span class="n">F</span><span class="o">.</span><span class="n">when</span><span class="p">((</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">),</span> <span class="s2">&quot;Madrugada&quot;</span><span class="p">)</span>
+         <span class="o">.</span><span class="n">when</span><span class="p">((</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">6</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">12</span><span class="p">),</span> <span class="s2">&quot;Mañana&quot;</span><span class="p">)</span>
+         <span class="o">.</span><span class="n">when</span><span class="p">((</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">12</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">18</span><span class="p">),</span> <span class="s2">&quot;Tarde&quot;</span><span class="p">)</span>
+         <span class="o">.</span><span class="n">otherwise</span><span class="p">(</span><span class="s2">&quot;Noche&quot;</span><span class="p">)</span>
+    <span class="p">)</span> \
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;hour_str&quot;</span><span class="p">)</span>
+
+<span class="c1"># Mostrar las columnas seleccionadas</span>
+<span class="n">df_transformed</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">,</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span> <span class="s2">&quot;hour_of_day&quot;</span><span class="p">,</span> <span class="s2">&quot;franja_horaria&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># transformación para df_test</span>
+
+<span class="n">df_train_2</span> <span class="o">=</span> <span class="n">df_test</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;hour_str&quot;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">))</span>
+<span class="n">df_transformed_test</span> <span class="o">=</span> <span class="n">df_train_2</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;day&quot;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="s2">&quot;hour_str&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="s2">&quot;hour_str&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span>
+        <span class="s2">&quot;franja_horaria&quot;</span><span class="p">,</span>
+        <span class="n">F</span><span class="o">.</span><span class="n">when</span><span class="p">((</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">),</span> <span class="s2">&quot;Madrugada&quot;</span><span class="p">)</span>
+         <span class="o">.</span><span class="n">when</span><span class="p">((</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">6</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">12</span><span class="p">),</span> <span class="s2">&quot;Mañana&quot;</span><span class="p">)</span>
+         <span class="o">.</span><span class="n">when</span><span class="p">((</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">12</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">18</span><span class="p">),</span> <span class="s2">&quot;Tarde&quot;</span><span class="p">)</span>
+         <span class="o">.</span><span class="n">otherwise</span><span class="p">(</span><span class="s2">&quot;Noche&quot;</span><span class="p">)</span>
+    <span class="p">)</span> \
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;hour_str&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>+--------+---+-----------+--------------+
+|    hour|day|hour_of_day|franja_horaria|
++--------+---+-----------+--------------+
+|14102100| 21|          0|     Madrugada|
+|14102100| 21|          0|     Madrugada|
+|14102100| 21|          0|     Madrugada|
+|14102100| 21|          0|     Madrugada|
+|14102100| 21|          0|     Madrugada|
++--------+---+-----------+--------------+
+only showing top 5 rows
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="muestreo-de-los-datos">
+<h2>Muestreo de los datos<a class="headerlink" href="#muestreo-de-los-datos" title="Permalink to this heading">#</a></h2>
+<p>Debido al tamaño del dataset, el modelado con Scikit-Learn se realiza utilizando una muestra representativa del conjunto de entrenamiento. Dado que, el dataset original contiene aproximadamente 40 millones de registros y se desea mostrar las diferencias entre el entranamiento con esta muestra y todos los datos, de esta forma, se selecciona una muestra de aproximadamente 1 millón de observaciones.</p>
+<p>El muestreo se realiza de forma estratificada utilizando la variable objetivo “click”, de manera que se conserve aproximadamente la proporción de las clases presente en el conjunto original; y se utiliza una semilla (seed=42) para garantizar que el proceso sea reproducible. Sin embargo, la cantidad final puede no ser exactamente igual a un millón debido a que
+sampleBy() realiza un muestreo probabilístico. En este caso se obtuvieron 999.336 observaciones. Una vez seleccionada la muestra, esta se convierte a un DataFrame de Pandas para ser usados con scikit-learn.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">total_rows</span> <span class="o">=</span> <span class="n">df_transformed</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+<span class="n">fraction</span> <span class="o">=</span> <span class="mi">1_000_000</span> <span class="o">/</span> <span class="n">total_rows</span>
+
+<span class="c1"># Muestreo Estratificado por la variable objetivo &#39;click&#39; en PySpark</span>
+<span class="c1"># sampleBy toma un diccionario con las proporciones por cada clase (0 y 1)</span>
+<span class="n">df_sample_spark</span> <span class="o">=</span> <span class="n">df_transformed</span><span class="o">.</span><span class="n">sampleBy</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> <span class="n">fractions</span><span class="o">=</span><span class="p">{</span><span class="mi">0</span><span class="p">:</span> <span class="n">fraction</span><span class="p">,</span> <span class="mi">1</span><span class="p">:</span> <span class="n">fraction</span><span class="p">},</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span>
+
+<span class="c1"># Convertir la muestra reducida de 1M directamente a un DataFrame de Pandas</span>
+<span class="n">datos</span><span class="o">=</span> <span class="n">df_sample_spark</span><span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+
+<span class="c1"># Verificación</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total registros originales: </span><span class="si">{</span><span class="n">total_rows</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total registros en Pandas: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">datos</span><span class="p">)</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Distribución de &#39;click&#39; en la muestra (Pandas):&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">datos</span><span class="p">[</span><span class="s1">&#39;click&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total registros originales: 40,428,967
+Total registros en Pandas: 999,336
+
+Distribución de &#39;click&#39; en la muestra (Pandas):
+click
+0    0.830516
+1    0.169484
+Name: proportion, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<section id="informacion-del-dataset-resultante">
+<h3>Información del dataset resultante<a class="headerlink" href="#informacion-del-dataset-resultante" title="Permalink to this heading">#</a></h3>
+<p>Antes de realizar el modelado, se verifica la estructura del DataFrame obtenido.
+Se revisan:</p>
+<ul class="simple">
+<li><p>número de observaciones;</p></li>
+<li><p>número de variables;</p></li>
+<li><p>tipos de datos;</p></li>
+<li><p>cantidad de valores no nulos;</p></li>
+<li><p>consumo aproximado de memoria.</p></li>
+</ul>
+<p>Esta revisión permite identificar qué variables son numéricas y cuáles son categóricas, información necesaria para definir posteriormente las técnicas de preprocesamiento.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">datos</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(999336, 27)
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">datos</span><span class="o">.</span><span class="n">info</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>&lt;class &#39;pandas.core.frame.DataFrame&#39;&gt;
+RangeIndex: 999336 entries, 0 to 999335
+Data columns (total 27 columns):
+ #   Column            Non-Null Count   Dtype 
+---  ------            --------------   ----- 
+ 0   id                999336 non-null  object
+ 1   click             999336 non-null  int32 
+ 2   hour              999336 non-null  int32 
+ 3   C1                999336 non-null  int32 
+ 4   banner_pos        999336 non-null  int32 
+ 5   site_id           999336 non-null  object
+ 6   site_domain       999336 non-null  object
+ 7   site_category     999336 non-null  object
+ 8   app_id            999336 non-null  object
+ 9   app_domain        999336 non-null  object
+ 10  app_category      999336 non-null  object
+ 11  device_id         999336 non-null  object
+ 12  device_ip         999336 non-null  object
+ 13  device_model      999336 non-null  object
+ 14  device_type       999336 non-null  int32 
+ 15  device_conn_type  999336 non-null  int32 
+ 16  C14               999336 non-null  int32 
+ 17  C15               999336 non-null  int32 
+ 18  C16               999336 non-null  int32 
+ 19  C17               999336 non-null  int32 
+ 20  C18               999336 non-null  int32 
+ 21  C19               999336 non-null  int32 
+ 22  C20               999336 non-null  int32 
+ 23  C21               999336 non-null  int32 
+ 24  day               999336 non-null  int32 
+ 25  hour_of_day       999336 non-null  int32 
+ 26  franja_horaria    999336 non-null  object
+dtypes: int32(16), object(11)
+memory usage: 144.9+ MB
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="preprocesamiento">
+<h2>Preprocesamiento<a class="headerlink" href="#preprocesamiento" title="Permalink to this heading">#</a></h2>
+<p>El preprocesamiento tiene como objetivo transformar las variables originales en un formato adecuado para ser utilizado por la red neuronal.
+Las principales tareas realizadas son:</p>
+<ol class="arabic simple">
+<li><p>Selección de variables.</p></li>
+<li><p>División de los datos en entrenamiento y prueba.</p></li>
+<li><p>Reducción de cardinalidad mediante Top-K.</p></li>
+<li><p>Codificación de variables categóricas mediante One-Hot Encoding.</p></li>
+<li><p>Estandarización de variables numéricas.</p></li>
+</ol>
+<p>Estas transformaciones son necesarias porque el MLP de Scikit-Learn requiere variables numéricas y se beneficia de que las variables continuas se encuentren en escalas comparables.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">pickle</span>
+<span class="kn">import</span> <span class="nn">joblib</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">train_test_split</span>
+<span class="kn">from</span> <span class="nn">sklearn.preprocessing</span> <span class="kn">import</span> <span class="n">OneHotEncoder</span><span class="p">,</span> <span class="n">StandardScaler</span>
+<span class="kn">from</span> <span class="nn">sklearn.compose</span> <span class="kn">import</span> <span class="n">ColumnTransformer</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="s2">&quot;../checkpoints&quot;</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<section id="seleccion-de-variables-relevantes">
+<h3>Selección de variables relevantes<a class="headerlink" href="#seleccion-de-variables-relevantes" title="Permalink to this heading">#</a></h3>
+<p>Se decidió eliminar las variables “id”, “hour”, “device_ip” y “device_id” por su alta cardinalidad y por ser redundante para el modelo. Además, se definieron las técnicas de preprocesamiento para cada variable:</p>
+<ul class="simple">
+<li><p>Aplicación de top_k grouping entre 10-50: para las variables “site_id”, “site_domain”, “app_id”, “app_domain”, “device_model”, “C14”</p></li>
+<li><p>Aplicación de top_k grouping entre 10-30: para las variables “C17”, “C19”, “C20”, “C21”</p></li>
+<li><p>Aplicación de One_Hot_encoder: para las variables “C1”, “banner_pos”, “site_category”, “app_category”,”device_type”, “device_conn_type”, “C15”, “C16”,”C18”, “franja_horaria”</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">cols_drop</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;id&quot;</span><span class="p">,</span> <span class="s2">&quot;hour&quot;</span><span class="p">,</span> <span class="s2">&quot;device_ip&quot;</span><span class="p">,</span> <span class="s2">&quot;device_id&quot;</span><span class="p">]</span> 
+
+<span class="n">cols_topk_high</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;site_id&quot;</span><span class="p">,</span> <span class="s2">&quot;site_domain&quot;</span><span class="p">,</span> <span class="s2">&quot;app_id&quot;</span><span class="p">,</span> <span class="s2">&quot;app_domain&quot;</span><span class="p">,</span>
+                   <span class="s2">&quot;device_model&quot;</span><span class="p">,</span> <span class="s2">&quot;C14&quot;</span><span class="p">]</span>        <span class="c1"># K entre 10-50</span>
+
+<span class="n">cols_topk_medium</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;C17&quot;</span><span class="p">,</span> <span class="s2">&quot;C19&quot;</span><span class="p">,</span> <span class="s2">&quot;C20&quot;</span><span class="p">,</span> <span class="s2">&quot;C21&quot;</span><span class="p">]</span>  <span class="c1"># K entre 10-30</span>
+
+<span class="n">cols_onehot_direct</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span> <span class="s2">&quot;banner_pos&quot;</span><span class="p">,</span> <span class="s2">&quot;site_category&quot;</span><span class="p">,</span> <span class="s2">&quot;app_category&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;device_type&quot;</span><span class="p">,</span> <span class="s2">&quot;device_conn_type&quot;</span><span class="p">,</span> <span class="s2">&quot;C15&quot;</span><span class="p">,</span> <span class="s2">&quot;C16&quot;</span><span class="p">,</span>
+                       <span class="s2">&quot;C18&quot;</span><span class="p">,</span> <span class="s2">&quot;franja_horaria&quot;</span><span class="p">]</span>
+
+<span class="n">cols_numeric</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;day&quot;</span><span class="p">,</span> <span class="s2">&quot;hour_of_day&quot;</span><span class="p">]</span>
+<span class="n">target</span> <span class="o">=</span> <span class="s2">&quot;click&quot;</span>
+
+<span class="n">df_model</span> <span class="o">=</span> <span class="n">datos</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="n">cols_drop</span><span class="p">)</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="division-de-train-test-estratificada">
+<h3>Division de train/test estratificada<a class="headerlink" href="#division-de-train-test-estratificada" title="Permalink to this heading">#</a></h3>
+<p>Después de seleccionar las variables, se separan las características predictoras “X” de la variable objetivo “y”. La variable objetivo es “click”, que representa si ocurrió o no un clic sobre el anuncio. Los datos se dividen utilizando una proporción de 80 % para entrenamiento y 20 % para prueba. Además, se utiliza “stratify=y” para realizar una división estratificada. Esto permite conservar aproximadamente la misma proporción de las clases <code class="docutils literal notranslate"><span class="pre">0</span></code> y <code class="docutils literal notranslate"><span class="pre">1</span></code> en ambos conjuntos.
+La estratificación es especialmente importante en problemas de clasificación, ya que evita que el conjunto de prueba tenga una distribución de clases muy diferente a la del conjunto de entrenamiento.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X</span> <span class="o">=</span> <span class="n">df_model</span><span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="n">target</span><span class="p">])</span>
+<span class="n">y</span> <span class="o">=</span> <span class="n">df_model</span><span class="p">[</span><span class="n">target</span><span class="p">]</span>
+
+<span class="n">X_train</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">y_train</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">train_test_split</span><span class="p">(</span>
+    <span class="n">X</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">test_size</span><span class="o">=</span><span class="mf">0.2</span><span class="p">,</span> <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span> <span class="n">stratify</span><span class="o">=</span><span class="n">y</span>
+<span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Train: </span><span class="si">{</span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2"> | Test: </span><span class="si">{</span><span class="n">X_test</span><span class="o">.</span><span class="n">shape</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Proporción de clases (train):&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Proporción de clases (test):&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y_test</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Train: (799468, 22) | Test: (199868, 22)
+
+Proporción de clases (train):
+click
+0    0.830516
+1    0.169484
+Name: proportion, dtype: float64
+
+Proporción de clases (test):
+click
+0    0.830518
+1    0.169482
+Name: proportion, dtype: float64
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_train</span><span class="o">.</span><span class="n">shape</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_plain highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>(799468, 22)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="codificacion-escalado">
+<h3>Codificación + escalado<a class="headerlink" href="#codificacion-escalado" title="Permalink to this heading">#</a></h3>
+<p>Algunas variables categóricas presentan una gran cantidad de categorías diferentes. Aplicar One-Hot Encoding directamente sobre ellas podría generar cientos o miles de columnas y aumentar considerablemente el costo computacional del modelo. Por tanto, para solucionar este problema se utiliza la estrategia Top-K Grouping, esta técnica conserva las categorías que aparecen con mayor frecuencia y agrupa todas las demás categorías bajo una única categoría denominada <code class="docutils literal notranslate"><span class="pre">Otros</span></code>. Para las variables de mayor cardinalidad se conservan las 30 categorías más frecuentes, mientras que para las variables de cardinalidad media se conservan las 20 categorías más frecuentes. De esta manera se reduce la dimensionalidad de los datos y se facilita el
+entrenamiento de la red neuronal.</p>
+<p>Además, el Top-K se calcula utilizando exclusivamente el conjunto de entrenamiento. Esto significa que las categorías más frecuentes se determinan a partir de <code class="docutils literal notranslate"><span class="pre">X_train</span></code> y posteriormente esas mismas categorías se aplican tanto a <code class="docutils literal notranslate"><span class="pre">X_train</span></code> como a <code class="docutils literal notranslate"><span class="pre">X_test</span></code>. Esta estrategia evita el <strong>data leakage</strong>, ya que ninguna información del conjunto de prueba participa en el aprendizaje del preprocesamiento.</p>
+<p>El flujo utilizado es:</p>
+<p><strong>X_train → aprender categorías Top-K → transformar X_train y X_test</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">def</span> <span class="nf">ajustar_topk_grouping</span><span class="p">(</span><span class="n">df_train</span><span class="p">,</span> <span class="n">columnas</span><span class="p">,</span> <span class="n">k_dict</span><span class="p">,</span> <span class="n">categoria_otros</span><span class="o">=</span><span class="s2">&quot;Otros&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Calcula las categorías top-k usando SOLO datos de entrenamiento.&quot;&quot;&quot;</span>
+    <span class="n">top_categorias</span> <span class="o">=</span> <span class="p">{}</span>
+    <span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">columnas</span><span class="p">:</span>
+        <span class="n">k</span> <span class="o">=</span> <span class="n">k_dict</span><span class="p">[</span><span class="n">col</span><span class="p">]</span>
+        <span class="c1"># Aseguramos tipo string ANTES de calcular frecuencias</span>
+        <span class="n">serie</span> <span class="o">=</span> <span class="n">df_train</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+        <span class="n">top_k</span> <span class="o">=</span> <span class="n">serie</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">nlargest</span><span class="p">(</span><span class="n">k</span><span class="p">)</span><span class="o">.</span><span class="n">index</span>
+        <span class="n">top_categorias</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span><span class="n">top_k</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">top_categorias</span>
+
+<span class="k">def</span> <span class="nf">aplicar_topk_grouping</span><span class="p">(</span><span class="n">df</span><span class="p">,</span> <span class="n">top_categorias</span><span class="p">,</span> <span class="n">categoria_otros</span><span class="o">=</span><span class="s2">&quot;Otros&quot;</span><span class="p">):</span>
+<span class="w">    </span><span class="sd">&quot;&quot;&quot;Aplica categorías ya calculadas a cualquier partición (train, test, o test real de Kaggle).&quot;&quot;&quot;</span>
+    <span class="n">df</span> <span class="o">=</span> <span class="n">df</span><span class="o">.</span><span class="n">copy</span><span class="p">()</span>
+    <span class="k">for</span> <span class="n">col</span><span class="p">,</span> <span class="n">top_k</span> <span class="ow">in</span> <span class="n">top_categorias</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>  <span class="c1"># uniformar tipo primero</span>
+        <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span> <span class="o">=</span> <span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">where</span><span class="p">(</span><span class="n">df</span><span class="p">[</span><span class="n">col</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">(</span><span class="n">top_k</span><span class="p">),</span> <span class="n">categoria_otros</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">df</span>
+
+<span class="n">k_dict</span> <span class="o">=</span> <span class="p">{</span><span class="o">**</span><span class="p">{</span><span class="n">c</span><span class="p">:</span> <span class="mi">30</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols_topk_high</span><span class="p">},</span> <span class="o">**</span><span class="p">{</span><span class="n">c</span><span class="p">:</span> <span class="mi">20</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cols_topk_medium</span><span class="p">}}</span>
+<span class="n">cols_topk_all</span> <span class="o">=</span> <span class="n">cols_topk_high</span> <span class="o">+</span> <span class="n">cols_topk_medium</span>
+
+<span class="c1"># Fit SOLO en train</span>
+<span class="n">top_categorias_guardadas</span> <span class="o">=</span> <span class="n">ajustar_topk_grouping</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">cols_topk_all</span><span class="p">,</span> <span class="n">k_dict</span><span class="p">)</span>
+
+<span class="c1"># Transform en train y en test (test usa las categorías aprendidas en train)</span>
+<span class="n">X_train</span> <span class="o">=</span> <span class="n">aplicar_topk_grouping</span><span class="p">(</span><span class="n">X_train</span><span class="p">,</span> <span class="n">top_categorias_guardadas</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">aplicar_topk_grouping</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">top_categorias_guardadas</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Proporción de clases (train):&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y_train</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Proporción de clases (test):&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">y_test</span><span class="o">.</span><span class="n">value_counts</span><span class="p">(</span><span class="n">normalize</span><span class="o">=</span><span class="kc">True</span><span class="p">))</span>
+
+
+<span class="c1"># Codificación de categóricas + Escalado de numéricas</span>
+<span class="n">cols_categoricas</span> <span class="o">=</span> <span class="n">cols_topk_all</span> <span class="o">+</span> <span class="n">cols_onehot_direct</span>  <span class="c1"># topk_high + topk_medium + onehot_direct</span>
+
+<span class="n">preprocessor</span> <span class="o">=</span> <span class="n">ColumnTransformer</span><span class="p">(</span>
+    <span class="n">transformers</span><span class="o">=</span><span class="p">[</span>
+        <span class="p">(</span><span class="s2">&quot;cat&quot;</span><span class="p">,</span> <span class="n">OneHotEncoder</span><span class="p">(</span><span class="n">handle_unknown</span><span class="o">=</span><span class="s2">&quot;ignore&quot;</span><span class="p">,</span> <span class="n">sparse_output</span><span class="o">=</span><span class="kc">False</span><span class="p">),</span> <span class="n">cols_categoricas</span><span class="p">),</span>
+        <span class="p">(</span><span class="s2">&quot;num&quot;</span><span class="p">,</span> <span class="n">StandardScaler</span><span class="p">(),</span> <span class="n">cols_numeric</span><span class="p">),</span>
+    <span class="p">],</span>
+    <span class="n">remainder</span><span class="o">=</span><span class="s2">&quot;drop&quot;</span>
+<span class="p">)</span>
+
+<span class="c1"># Fit SOLO en train</span>
+<span class="n">X_train_proc</span> <span class="o">=</span> <span class="n">preprocessor</span><span class="o">.</span><span class="n">fit_transform</span><span class="p">(</span><span class="n">X_train</span><span class="p">)</span>
+
+<span class="c1"># Transform (no fit) en test</span>
+<span class="n">X_test_proc</span> <span class="o">=</span> <span class="n">preprocessor</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">X_test</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Dimensión final del vector de entrada:&quot;</span><span class="p">,</span> <span class="n">X_train_proc</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">1</span><span class="p">])</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;X_train_proc:&quot;</span><span class="p">,</span> <span class="n">X_train_proc</span><span class="o">.</span><span class="n">shape</span><span class="p">,</span> <span class="s2">&quot;| X_test_proc:&quot;</span><span class="p">,</span> <span class="n">X_test_proc</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Proporción de clases (train):
+click
+0    0.830516
+1    0.169484
+Name: proportion, dtype: float64
+
+Proporción de clases (test):
+click
+0    0.830518
+1    0.169482
+Name: proportion, dtype: float64
+Dimensión final del vector de entrada: 370
+X_train_proc: (799468, 370) | X_test_proc: (199868, 370)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="definicion-del-entrenamiento">
+<h2>Definición del entrenamiento<a class="headerlink" href="#definicion-del-entrenamiento" title="Permalink to this heading">#</a></h2>
+<p>En este bloque se establece el proceso mediante el cual se entrenan y evalúan diferentes configuraciones del modelo MLP (Multi-Layer Perceptron). Para ello, se define una búsqueda sistemática de hiperparámetros con el objetivo de identificar la configuración que presenta el mejor desempeño.</p>
+<p>Primero se establece una grilla de hiperparámetros que contiene diferentes combinaciones de:</p>
+<p>Arquitectura de la red (hidden_layer_sizes): se prueban las configuraciones <span class="math notranslate nohighlight">\((50,)\)</span>, <span class="math notranslate nohighlight">\((100,)\)</span> y <span class="math notranslate nohighlight">\((100,50)\)</span>, que representan una o dos capas ocultas con diferente número de neuronas.
+Regularización (alpha): se consideran los valores <span class="math notranslate nohighlight">\(0.0001\)</span>, <span class="math notranslate nohighlight">\(0.001\)</span> y <span class="math notranslate nohighlight">\(0.01\)</span>, con el propósito de controlar la complejidad del modelo y reducir el riesgo de sobreajuste.
+Número máximo de iteraciones (max_iter): se prueban los valores <span class="math notranslate nohighlight">\(50\)</span> y <span class="math notranslate nohighlight">\(100\)</span>.</p>
+<p>En total, se generan:</p>
+<div class="math notranslate nohighlight">
+\[
+3 \times 3 \times 2 = 18
+\]</div>
+<p>combinaciones de hiperparámetros.</p>
+<section id="proceso-de-entrenamiento">
+<h3><strong>Proceso de entrenamiento</strong><a class="headerlink" href="#proceso-de-entrenamiento" title="Permalink to this heading">#</a></h3>
+<p>Para cada una de las combinaciones generadas, se realiza el siguiente procedimiento:</p>
+<p>Se verifica si la combinación ya fue evaluada anteriormente mediante el archivo de resultados almacenado como checkpoint. Si ya existe, se omite para evitar repetir el entrenamiento.
+Se crea un nuevo MLPClassifier utilizando la configuración correspondiente. Se utiliza random_state=42 para garantizar la reproducibilidad del proceso y early_stopping=True para permitir que el entrenamiento se detenga anticipadamente cuando el modelo deje de mejorar.
+Se entrena el modelo utilizando los datos previamente transformados (X_train_proc) y las etiquetas de entrenamiento (y_train). Durante este proceso se registra el tiempo de entrenamiento.
+Una vez entrenado, el modelo realiza predicciones sobre el conjunto de prueba (X_test_proc). Se obtienen tanto las clases predichas como las probabilidades de pertenencia a la clase positiva.
+A partir de estas predicciones se calculan las métricas Accuracy, Precision, Recall, F1-Score y ROC AUC, además de la matriz de confusión.
+También se registra el tiempo de predicción, lo que permitirá posteriormente analizar el costo computacional del modelo.
+Finalmente, se guarda el modelo entrenado, la matriz de confusión y los resultados obtenidos. El archivo CSV se actualiza después de cada iteración, funcionando como un checkpoint que permite conservar el progreso de la búsqueda.</p>
+<p>De esta manera, el proceso completo para cada configuración puede representarse como:</p>
+<div class="math notranslate nohighlight">
+\[
+\text{Configuración}
+\rightarrow
+\text{Entrenamiento}
+\rightarrow
+\text{Predicción}
+\rightarrow
+\text{Evaluación}
+\rightarrow
+\text{Medición del tiempo}
+\rightarrow
+\text{Almacenamiento}
+\]</div>
+<p>Al finalizar todas las combinaciones, se obtiene un conjunto de resultados que permite comparar el desempeño de las diferentes configuraciones del MLP y seleccionar posteriormente la más adecuada según las métricas obtenidas.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">sklearn.neural_network</span> <span class="kn">import</span> <span class="n">MLPClassifier</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">ParameterGrid</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="p">(</span><span class="n">accuracy_score</span><span class="p">,</span> <span class="n">precision_score</span><span class="p">,</span> <span class="n">recall_score</span><span class="p">,</span> <span class="n">f1_score</span><span class="p">,</span> <span class="n">roc_auc_score</span><span class="p">,</span> <span class="n">confusion_matrix</span><span class="p">)</span>
+<span class="kn">import</span> <span class="nn">time</span>
+
+<span class="n">param_grid</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;hidden_layer_sizes&quot;</span><span class="p">:</span> <span class="p">[(</span><span class="mi">50</span><span class="p">,),</span> <span class="p">(</span><span class="mi">100</span><span class="p">,),</span> <span class="p">(</span><span class="mi">100</span><span class="p">,</span> <span class="mi">50</span><span class="p">)],</span>
+    <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mf">0.0001</span><span class="p">,</span> <span class="mf">0.001</span><span class="p">,</span> <span class="mf">0.01</span><span class="p">],</span>
+    <span class="s2">&quot;max_iter&quot;</span><span class="p">:</span> <span class="p">[</span><span class="mi">50</span><span class="p">,</span> <span class="mi">100</span><span class="p">],</span>
+<span class="p">}</span>
+
+<span class="n">checkpoint_dir</span> <span class="o">=</span> <span class="s2">&quot;../checkpoints/mlp_gridsearch&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">checkpoint_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">results_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">checkpoint_dir</span><span class="p">,</span> <span class="s2">&quot;resultados_gridsearch.csv&quot;</span><span class="p">)</span>
+
+<span class="c1"># Si ya hay resultados previos, se cargan para no repetir combinaciones</span>
+<span class="k">if</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">exists</span><span class="p">(</span><span class="n">results_path</span><span class="p">):</span>
+    <span class="n">resultados_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">results_path</span><span class="p">)</span>
+    <span class="n">combinaciones_evaluadas</span> <span class="o">=</span> <span class="nb">set</span><span class="p">(</span>
+        <span class="nb">zip</span><span class="p">(</span><span class="n">resultados_df</span><span class="p">[</span><span class="s2">&quot;hidden_layer_sizes&quot;</span><span class="p">],</span> <span class="n">resultados_df</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">],</span> <span class="n">resultados_df</span><span class="p">[</span><span class="s2">&quot;max_iter&quot;</span><span class="p">])</span>
+    <span class="p">)</span>
+<span class="k">else</span><span class="p">:</span>
+    <span class="n">resultados_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">columns</span><span class="o">=</span><span class="p">[</span>
+        <span class="s2">&quot;iteracion&quot;</span><span class="p">,</span> <span class="s2">&quot;hidden_layer_sizes&quot;</span><span class="p">,</span> <span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="s2">&quot;max_iter&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;accuracy&quot;</span><span class="p">,</span> <span class="s2">&quot;precision&quot;</span><span class="p">,</span> <span class="s2">&quot;recall&quot;</span><span class="p">,</span> <span class="s2">&quot;f1_score&quot;</span><span class="p">,</span> <span class="s2">&quot;roc_auc&quot;</span><span class="p">,</span>
+        <span class="s2">&quot;train_time_seg&quot;</span><span class="p">,</span> <span class="s2">&quot;predict_time_seg&quot;</span><span class="p">,</span> <span class="s2">&quot;modelo_path&quot;</span>
+    <span class="p">])</span>
+    <span class="n">combinaciones_evaluadas</span> <span class="o">=</span> <span class="nb">set</span><span class="p">()</span>
+
+<span class="n">grid</span> <span class="o">=</span> <span class="nb">list</span><span class="p">(</span><span class="n">ParameterGrid</span><span class="p">(</span><span class="n">param_grid</span><span class="p">))</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total de combinaciones a evaluar: </span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">params</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">grid</span><span class="p">,</span> <span class="n">start</span><span class="o">=</span><span class="mi">1</span><span class="p">):</span>
+    <span class="n">combo_key</span> <span class="o">=</span> <span class="p">(</span><span class="nb">str</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;hidden_layer_sizes&quot;</span><span class="p">]),</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">],</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;max_iter&quot;</span><span class="p">])</span>
+    <span class="k">if</span> <span class="n">combo_key</span> <span class="ow">in</span> <span class="n">combinaciones_evaluadas</span><span class="p">:</span>
+        <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span><span class="si">}</span><span class="s2">] Ya evaluado, se omite: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+        <span class="k">continue</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;[</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">/</span><span class="si">{</span><span class="nb">len</span><span class="p">(</span><span class="n">grid</span><span class="p">)</span><span class="si">}</span><span class="s2">] Entrenando con: </span><span class="si">{</span><span class="n">params</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+
+    <span class="n">modelo</span> <span class="o">=</span> <span class="n">MLPClassifier</span><span class="p">(</span>
+        <span class="n">hidden_layer_sizes</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;hidden_layer_sizes&quot;</span><span class="p">],</span>
+        <span class="n">alpha</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">],</span>
+        <span class="n">max_iter</span><span class="o">=</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;max_iter&quot;</span><span class="p">],</span>
+        <span class="n">random_state</span><span class="o">=</span><span class="mi">42</span><span class="p">,</span>
+        <span class="n">early_stopping</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span>
+    <span class="p">)</span>
+
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">modelo</span><span class="o">.</span><span class="n">fit</span><span class="p">(</span><span class="n">X_train_proc</span><span class="p">,</span> <span class="n">y_train</span><span class="p">)</span>
+    <span class="n">train_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+
+    <span class="n">t0</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span>
+    <span class="n">y_pred</span> <span class="o">=</span> <span class="n">modelo</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_proc</span><span class="p">)</span>
+    <span class="n">y_proba</span> <span class="o">=</span> <span class="n">modelo</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test_proc</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+    <span class="n">predict_time</span> <span class="o">=</span> <span class="n">time</span><span class="o">.</span><span class="n">time</span><span class="p">()</span> <span class="o">-</span> <span class="n">t0</span>
+
+    <span class="n">acc</span> <span class="o">=</span> <span class="n">accuracy_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+    <span class="n">prec</span> <span class="o">=</span> <span class="n">precision_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">rec</span> <span class="o">=</span> <span class="n">recall_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">f1</span> <span class="o">=</span> <span class="n">f1_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">,</span> <span class="n">zero_division</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+    <span class="n">auc</span> <span class="o">=</span> <span class="n">roc_auc_score</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_proba</span><span class="p">)</span>
+    <span class="n">cm</span> <span class="o">=</span> <span class="n">confusion_matrix</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_pred</span><span class="p">)</span>
+
+    <span class="n">modelo_filename</span> <span class="o">=</span> <span class="sa">f</span><span class="s2">&quot;mlp_iter</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.pkl&quot;</span>
+    <span class="n">modelo_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">checkpoint_dir</span><span class="p">,</span> <span class="n">modelo_filename</span><span class="p">)</span>
+    <span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">modelo</span><span class="p">,</span> <span class="n">modelo_path</span><span class="p">)</span>
+    <span class="n">np</span><span class="o">.</span><span class="n">save</span><span class="p">(</span><span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">checkpoint_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;cm_iter</span><span class="si">{</span><span class="n">i</span><span class="si">}</span><span class="s2">.npy&quot;</span><span class="p">),</span> <span class="n">cm</span><span class="p">)</span>
+
+    <span class="n">nueva_fila</span> <span class="o">=</span> <span class="p">{</span>
+        <span class="s2">&quot;iteracion&quot;</span><span class="p">:</span> <span class="n">i</span><span class="p">,</span>
+        <span class="s2">&quot;hidden_layer_sizes&quot;</span><span class="p">:</span> <span class="nb">str</span><span class="p">(</span><span class="n">params</span><span class="p">[</span><span class="s2">&quot;hidden_layer_sizes&quot;</span><span class="p">]),</span>
+        <span class="s2">&quot;alpha&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;alpha&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;max_iter&quot;</span><span class="p">:</span> <span class="n">params</span><span class="p">[</span><span class="s2">&quot;max_iter&quot;</span><span class="p">],</span>
+        <span class="s2">&quot;accuracy&quot;</span><span class="p">:</span> <span class="n">acc</span><span class="p">,</span> <span class="s2">&quot;precision&quot;</span><span class="p">:</span> <span class="n">prec</span><span class="p">,</span> <span class="s2">&quot;recall&quot;</span><span class="p">:</span> <span class="n">rec</span><span class="p">,</span>
+        <span class="s2">&quot;f1_score&quot;</span><span class="p">:</span> <span class="n">f1</span><span class="p">,</span> <span class="s2">&quot;roc_auc&quot;</span><span class="p">:</span> <span class="n">auc</span><span class="p">,</span>
+        <span class="s2">&quot;train_time_seg&quot;</span><span class="p">:</span> <span class="n">train_time</span><span class="p">,</span> <span class="s2">&quot;predict_time_seg&quot;</span><span class="p">:</span> <span class="n">predict_time</span><span class="p">,</span>
+        <span class="s2">&quot;modelo_path&quot;</span><span class="p">:</span> <span class="n">modelo_path</span><span class="p">,</span>
+    <span class="p">}</span>
+    <span class="n">resultados_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">concat</span><span class="p">([</span><span class="n">resultados_df</span><span class="p">,</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">([</span><span class="n">nueva_fila</span><span class="p">])],</span> <span class="n">ignore_index</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+    <span class="c1"># Checkpoint: se guarda el CSV acumulado tras CADA iteración</span>
+    <span class="n">resultados_df</span><span class="o">.</span><span class="n">to_csv</span><span class="p">(</span><span class="n">results_path</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+    <span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;   -&gt; AUC: </span><span class="si">{</span><span class="n">auc</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> | F1: </span><span class="si">{</span><span class="n">f1</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> | Recall: </span><span class="si">{</span><span class="n">rec</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2"> | &quot;</span>
+          <span class="sa">f</span><span class="s2">&quot;Train: </span><span class="si">{</span><span class="n">train_time</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">s | Predict: </span><span class="si">{</span><span class="n">predict_time</span><span class="si">:</span><span class="s2">.2f</span><span class="si">}</span><span class="s2">s&quot;</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;</span><span class="se">\n</span><span class="s2">Búsqueda completada.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total de combinaciones a evaluar: 18
+[1/18] Ya evaluado, se omite: {&#39;alpha&#39;: 0.0001, &#39;hidden_layer_sizes&#39;: (50,), &#39;max_iter&#39;: 50}
+[2/18] Entrenando con: {&#39;alpha&#39;: 0.0001, &#39;hidden_layer_sizes&#39;: (50,), &#39;max_iter&#39;: 100}
+   -&gt; AUC: 0.7331 | F1: 0.1286 | Recall: 0.0725 | Train: 94.8s | Predict: 0.31s
+[3/18] Entrenando con: {&#39;alpha&#39;: 0.0001, &#39;hidden_layer_sizes&#39;: (100,), &#39;max_iter&#39;: 50}
+   -&gt; AUC: 0.7340 | F1: 0.1290 | Recall: 0.0727 | Train: 89.1s | Predict: 0.41s
+[4/18] Entrenando con: {&#39;alpha&#39;: 0.0001, &#39;hidden_layer_sizes&#39;: (100,), &#39;max_iter&#39;: 100}
+   -&gt; AUC: 0.7340 | F1: 0.1290 | Recall: 0.0727 | Train: 86.6s | Predict: 0.39s
+[5/18] Entrenando con: {&#39;alpha&#39;: 0.0001, &#39;hidden_layer_sizes&#39;: (100, 50), &#39;max_iter&#39;: 50}
+   -&gt; AUC: 0.7346 | F1: 0.1181 | Recall: 0.0657 | Train: 106.8s | Predict: 0.46s
+[6/18] Entrenando con: {&#39;alpha&#39;: 0.0001, &#39;hidden_layer_sizes&#39;: (100, 50), &#39;max_iter&#39;: 100}
+   -&gt; AUC: 0.7346 | F1: 0.1181 | Recall: 0.0657 | Train: 105.5s | Predict: 0.46s
+[7/18] Entrenando con: {&#39;alpha&#39;: 0.001, &#39;hidden_layer_sizes&#39;: (50,), &#39;max_iter&#39;: 50}
+   -&gt; AUC: 0.7337 | F1: 0.1199 | Recall: 0.0669 | Train: 104.0s | Predict: 0.30s
+[8/18] Entrenando con: {&#39;alpha&#39;: 0.001, &#39;hidden_layer_sizes&#39;: (50,), &#39;max_iter&#39;: 100}
+   -&gt; AUC: 0.7337 | F1: 0.1199 | Recall: 0.0669 | Train: 104.3s | Predict: 0.31s
+[9/18] Entrenando con: {&#39;alpha&#39;: 0.001, &#39;hidden_layer_sizes&#39;: (100,), &#39;max_iter&#39;: 50}
+   -&gt; AUC: 0.7340 | F1: 0.1235 | Recall: 0.0691 | Train: 71.7s | Predict: 0.41s
+[10/18] Entrenando con: {&#39;alpha&#39;: 0.001, &#39;hidden_layer_sizes&#39;: (100,), &#39;max_iter&#39;: 100}
+   -&gt; AUC: 0.7340 | F1: 0.1235 | Recall: 0.0691 | Train: 72.2s | Predict: 0.39s
+[11/18] Entrenando con: {&#39;alpha&#39;: 0.001, &#39;hidden_layer_sizes&#39;: (100, 50), &#39;max_iter&#39;: 50}
+   -&gt; AUC: 0.7338 | F1: 0.1153 | Recall: 0.0639 | Train: 70.6s | Predict: 0.45s
+[12/18] Entrenando con: {&#39;alpha&#39;: 0.001, &#39;hidden_layer_sizes&#39;: (100, 50), &#39;max_iter&#39;: 100}
+   -&gt; AUC: 0.7338 | F1: 0.1153 | Recall: 0.0639 | Train: 72.5s | Predict: 0.45s
+[13/18] Entrenando con: {&#39;alpha&#39;: 0.01, &#39;hidden_layer_sizes&#39;: (50,), &#39;max_iter&#39;: 50}
+   -&gt; AUC: 0.7323 | F1: 0.0873 | Recall: 0.0470 | Train: 49.5s | Predict: 0.32s
+[14/18] Entrenando con: {&#39;alpha&#39;: 0.01, &#39;hidden_layer_sizes&#39;: (50,), &#39;max_iter&#39;: 100}
+   -&gt; AUC: 0.7323 | F1: 0.0873 | Recall: 0.0470 | Train: 49.1s | Predict: 0.31s
+[15/18] Entrenando con: {&#39;alpha&#39;: 0.01, &#39;hidden_layer_sizes&#39;: (100,), &#39;max_iter&#39;: 50}
+   -&gt; AUC: 0.7328 | F1: 0.1284 | Recall: 0.0725 | Train: 83.0s | Predict: 0.38s
+[16/18] Entrenando con: {&#39;alpha&#39;: 0.01, &#39;hidden_layer_sizes&#39;: (100,), &#39;max_iter&#39;: 100}
+   -&gt; AUC: 0.7328 | F1: 0.1284 | Recall: 0.0725 | Train: 87.6s | Predict: 0.40s
+[17/18] Entrenando con: {&#39;alpha&#39;: 0.01, &#39;hidden_layer_sizes&#39;: (100, 50), &#39;max_iter&#39;: 50}
+   -&gt; AUC: 0.7319 | F1: 0.1082 | Recall: 0.0595 | Train: 101.0s | Predict: 0.45s
+[18/18] Entrenando con: {&#39;alpha&#39;: 0.01, &#39;hidden_layer_sizes&#39;: (100, 50), &#39;max_iter&#39;: 100}
+   -&gt; AUC: 0.7319 | F1: 0.1082 | Recall: 0.0595 | Train: 101.2s | Predict: 0.44s
+
+Búsqueda completada.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+<section id="tabla-de-resultados-del-entrenamiento">
+<h2>Tabla de resultados del entrenamiento<a class="headerlink" href="#tabla-de-resultados-del-entrenamiento" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">resultados_df</span> <span class="o">=</span> <span class="n">resultados_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;roc_auc&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">display</span><span class="p">(</span><span class="n">resultados_df</span><span class="o">.</span><span class="n">head</span><span class="p">(</span><span class="mi">10</span><span class="p">))</span>
+
+<span class="n">mejor_fila</span> <span class="o">=</span> <span class="n">resultados_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">mejor_modelo</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">mejor_fila</span><span class="p">[</span><span class="s2">&quot;modelo_path&quot;</span><span class="p">])</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Mejor combinación de hiperparámetros:&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="n">mejor_fila</span><span class="p">[[</span><span class="s2">&quot;hidden_layer_sizes&quot;</span><span class="p">,</span> <span class="s2">&quot;alpha&quot;</span><span class="p">,</span> <span class="s2">&quot;max_iter&quot;</span><span class="p">,</span> <span class="s2">&quot;roc_auc&quot;</span><span class="p">,</span> <span class="s2">&quot;f1_score&quot;</span><span class="p">,</span> <span class="s2">&quot;recall&quot;</span><span class="p">]])</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>iteracion</th>
+      <th>hidden_layer_sizes</th>
+      <th>alpha</th>
+      <th>max_iter</th>
+      <th>accuracy</th>
+      <th>precision</th>
+      <th>recall</th>
+      <th>f1_score</th>
+      <th>roc_auc</th>
+      <th>train_time_seg</th>
+      <th>predict_time_seg</th>
+      <th>modelo_path</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>4</th>
+      <td>5</td>
+      <td>(100, 50)</td>
+      <td>0.0001</td>
+      <td>50</td>
+      <td>0.833680</td>
+      <td>0.582723</td>
+      <td>0.065714</td>
+      <td>0.118109</td>
+      <td>0.734623</td>
+      <td>106.770765</td>
+      <td>0.455750</td>
+      <td>../checkpoints/mlp_gridsearch\mlp_iter5.pkl</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>6</td>
+      <td>(100, 50)</td>
+      <td>0.0001</td>
+      <td>100</td>
+      <td>0.833680</td>
+      <td>0.582723</td>
+      <td>0.065714</td>
+      <td>0.118109</td>
+      <td>0.734623</td>
+      <td>105.496664</td>
+      <td>0.459673</td>
+      <td>../checkpoints/mlp_gridsearch\mlp_iter6.pkl</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>3</td>
+      <td>(100,)</td>
+      <td>0.0001</td>
+      <td>50</td>
+      <td>0.833695</td>
+      <td>0.574061</td>
+      <td>0.072652</td>
+      <td>0.128980</td>
+      <td>0.733972</td>
+      <td>89.112804</td>
+      <td>0.411225</td>
+      <td>../checkpoints/mlp_gridsearch\mlp_iter3.pkl</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>4</td>
+      <td>(100,)</td>
+      <td>0.0001</td>
+      <td>100</td>
+      <td>0.833695</td>
+      <td>0.574061</td>
+      <td>0.072652</td>
+      <td>0.128980</td>
+      <td>0.733972</td>
+      <td>86.555765</td>
+      <td>0.390865</td>
+      <td>../checkpoints/mlp_gridsearch\mlp_iter4.pkl</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>10</td>
+      <td>(100,)</td>
+      <td>0.0010</td>
+      <td>100</td>
+      <td>0.833735</td>
+      <td>0.579599</td>
+      <td>0.069109</td>
+      <td>0.123493</td>
+      <td>0.733957</td>
+      <td>72.227220</td>
+      <td>0.387910</td>
+      <td>../checkpoints/mlp_gridsearch\mlp_iter10.pkl</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>9</td>
+      <td>(100,)</td>
+      <td>0.0010</td>
+      <td>50</td>
+      <td>0.833735</td>
+      <td>0.579599</td>
+      <td>0.069109</td>
+      <td>0.123493</td>
+      <td>0.733957</td>
+      <td>71.729862</td>
+      <td>0.406160</td>
+      <td>../checkpoints/mlp_gridsearch\mlp_iter9.pkl</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>11</td>
+      <td>(100, 50)</td>
+      <td>0.0010</td>
+      <td>50</td>
+      <td>0.833820</td>
+      <td>0.589967</td>
+      <td>0.063884</td>
+      <td>0.115284</td>
+      <td>0.733841</td>
+      <td>70.638867</td>
+      <td>0.448594</td>
+      <td>../checkpoints/mlp_gridsearch\mlp_iter11.pkl</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>12</td>
+      <td>(100, 50)</td>
+      <td>0.0010</td>
+      <td>100</td>
+      <td>0.833820</td>
+      <td>0.589967</td>
+      <td>0.063884</td>
+      <td>0.115284</td>
+      <td>0.733841</td>
+      <td>72.537413</td>
+      <td>0.453664</td>
+      <td>../checkpoints/mlp_gridsearch\mlp_iter12.pkl</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>7</td>
+      <td>(50,)</td>
+      <td>0.0010</td>
+      <td>50</td>
+      <td>0.833605</td>
+      <td>0.578799</td>
+      <td>0.066895</td>
+      <td>0.119929</td>
+      <td>0.733708</td>
+      <td>104.049732</td>
+      <td>0.300331</td>
+      <td>../checkpoints/mlp_gridsearch\mlp_iter7.pkl</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>8</td>
+      <td>(50,)</td>
+      <td>0.0010</td>
+      <td>100</td>
+      <td>0.833605</td>
+      <td>0.578799</td>
+      <td>0.066895</td>
+      <td>0.119929</td>
+      <td>0.733708</td>
+      <td>104.330171</td>
+      <td>0.312123</td>
+      <td>../checkpoints/mlp_gridsearch\mlp_iter8.pkl</td>
+    </tr>
+  </tbody>
+</table>
+</div></div><div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Mejor combinación de hiperparámetros:
+hidden_layer_sizes    (100, 50)
+alpha                    0.0001
+max_iter                     50
+roc_auc                0.734623
+f1_score               0.118109
+recall                 0.065714
+Name: 4, dtype: object
+</pre></div>
+</div>
+</div>
+</div>
+<p>Resultados de la búsqueda de hiperparámetros</p>
+<p>Se evaluaron diferentes configuraciones del MLP utilizando Accuracy, Precision, Recall, F1-Score y ROC AUC, además del tiempo de entrenamiento y predicción.</p>
+<p>La mejor configuración fue:
+Capas ocultas: (100, 50)
+Alpha: 0.0001
+Max_iter: 50
+ROC AUC: 0.7346
+F1-Score: 0.1181
+Recall: 0.0657</p>
+<p>La selección se realizó tomando ROC AUC como criterio principal. Aunque la Accuracy fue de 83.37%, el Recall fue bajo, lo que refleja la dificultad del modelo para identificar correctamente la clase positiva debido al desbalance de los datos.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">json</span>
+
+<span class="c1"># Carpeta de modelos finales (distinta de los checkpoints de cada iteración)</span>
+<span class="n">models_dir</span> <span class="o">=</span> <span class="s2">&quot;../models&quot;</span>
+<span class="n">os</span><span class="o">.</span><span class="n">makedirs</span><span class="p">(</span><span class="n">models_dir</span><span class="p">,</span> <span class="n">exist_ok</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">mejor_modelo_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">models_dir</span><span class="p">,</span> <span class="s2">&quot;mlp_sklearn_mejor_modelo.pkl&quot;</span><span class="p">)</span>
+<span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">mejor_modelo</span><span class="p">,</span> <span class="n">mejor_modelo_path</span><span class="p">)</span>
+
+<span class="c1"># Guardar también el preprocesador, para poder aplicar el modelo a datos nuevos</span>
+<span class="n">preprocessor_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">models_dir</span><span class="p">,</span> <span class="s2">&quot;preprocessor_sklearn.pkl&quot;</span><span class="p">)</span>
+<span class="n">joblib</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">preprocessor</span><span class="p">,</span> <span class="n">preprocessor_path</span><span class="p">)</span>
+
+<span class="c1"># Info de hiperparámetros y métricas del mejor modelo</span>
+<span class="n">info_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">models_dir</span><span class="p">,</span> <span class="s2">&quot;mlp_sklearn_mejor_modelo_info.json&quot;</span><span class="p">)</span>
+<span class="k">with</span> <span class="nb">open</span><span class="p">(</span><span class="n">info_path</span><span class="p">,</span> <span class="s2">&quot;w&quot;</span><span class="p">)</span> <span class="k">as</span> <span class="n">f</span><span class="p">:</span>
+    <span class="n">json</span><span class="o">.</span><span class="n">dump</span><span class="p">(</span><span class="n">mejor_fila</span><span class="o">.</span><span class="n">to_dict</span><span class="p">(),</span> <span class="n">f</span><span class="p">,</span> <span class="n">indent</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">default</span><span class="o">=</span><span class="nb">str</span><span class="p">)</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Modelo guardado en: </span><span class="si">{</span><span class="n">mejor_modelo_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Preprocesador guardado en: </span><span class="si">{</span><span class="n">preprocessor_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Info guardada en: </span><span class="si">{</span><span class="n">info_path</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Modelo guardado en: ../models\mlp_sklearn_mejor_modelo.pkl
+Preprocesador guardado en: ../models\preprocessor_sklearn.pkl
+Info guardada en: ../models\mlp_sklearn_mejor_modelo_info.json
+</pre></div>
+</div>
+</div>
+</div>
+<p>Finalmente, en el bloque anterior se guarda el mejor modelo.</p>
+</section>
+<section id="matriz-de-confusion">
+<h2>Matriz de confusión<a class="headerlink" href="#matriz-de-confusion" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">os</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">ConfusionMatrixDisplay</span>
+
+<span class="n">checkpoint_dir</span> <span class="o">=</span> <span class="s2">&quot;../checkpoints/mlp_gridsearch&quot;</span>
+<span class="n">results_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">checkpoint_dir</span><span class="p">,</span> <span class="s2">&quot;resultados_gridsearch.csv&quot;</span><span class="p">)</span>
+
+<span class="n">resultados_df</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">read_csv</span><span class="p">(</span><span class="n">results_path</span><span class="p">)</span>
+<span class="n">resultados_df</span> <span class="o">=</span> <span class="n">resultados_df</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;roc_auc&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+
+<span class="n">mejor_fila</span> <span class="o">=</span> <span class="n">resultados_df</span><span class="o">.</span><span class="n">iloc</span><span class="p">[</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">mejor_iteracion</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">mejor_fila</span><span class="p">[</span><span class="s2">&quot;iteracion&quot;</span><span class="p">])</span>
+
+<span class="n">cm_path</span> <span class="o">=</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">join</span><span class="p">(</span><span class="n">checkpoint_dir</span><span class="p">,</span> <span class="sa">f</span><span class="s2">&quot;cm_iter</span><span class="si">{</span><span class="n">mejor_iteracion</span><span class="si">}</span><span class="s2">.npy&quot;</span><span class="p">)</span>
+<span class="n">cm</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="n">cm_path</span><span class="p">)</span>
+
+<span class="n">disp</span> <span class="o">=</span> <span class="n">ConfusionMatrixDisplay</span><span class="p">(</span><span class="n">confusion_matrix</span><span class="o">=</span><span class="n">cm</span><span class="p">,</span> <span class="n">display_labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;No Click (0)&quot;</span><span class="p">,</span> <span class="s2">&quot;Click (1)&quot;</span><span class="p">])</span>
+<span class="n">disp</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span> <span class="n">values_format</span><span class="o">=</span><span class="s2">&quot;d&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Matriz de Confusión - Mejor modelo sklearn&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/95fab18ad75bd61075e3fb9e38df2238112fc3c5269ab6fd4311c80651d1271c.png" src="../_images/95fab18ad75bd61075e3fb9e38df2238112fc3c5269ab6fd4311c80651d1271c.png" />
+</div>
+</div>
+<p>La matriz de confusión muestra que el modelo predice correctamente la mayoría de los casos sin click, pero identifica muy pocos clics reales: de los 33,874 clics presentes en el conjunto de prueba, solo detectó 2,226, dejando pasar la gran mayoría como falsos negativos. Esto refleja el desbalance del dataset y el umbral de decisión fijo (0.5), que favorecen a la clase mayoritaria. Por eso, aunque la exactitud global parece buena, no es una métrica confiable aquí: un modelo que siempre predijera “No Click” obtendría un resultado similar sin aportar ningún valor real para identificar clics.</p>
+</section>
+<section id="curva-roc">
+<h2>Curva ROC<a class="headerlink" href="#curva-roc" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">joblib</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_curve</span><span class="p">,</span> <span class="n">auc</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+
+<span class="n">mejor_modelo</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;../checkpoints/mlp_gridsearch/mlp_iter5.pkl&quot;</span><span class="p">)</span>
+
+<span class="n">y_proba</span> <span class="o">=</span> <span class="n">mejor_modelo</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test_proc</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># Calcular la curva ROC</span>
+<span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">thresholds</span> <span class="o">=</span> <span class="n">roc_curve</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_proba</span><span class="p">)</span>
+<span class="n">roc_auc_value</span> <span class="o">=</span> <span class="n">auc</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">)</span>
+
+<span class="c1"># Graficar</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">6</span><span class="p">))</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;darkorange&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Curva ROC (AUC = </span><span class="si">{</span><span class="n">roc_auc_value</span><span class="si">:</span><span class="s2">.4f</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">plot</span><span class="p">([</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;gray&quot;</span><span class="p">,</span> <span class="n">lw</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Clasificador aleatorio&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Tasa de Falsos Positivos (FPR)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Tasa de Verdaderos Positivos (TPR)&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Curva ROC - Mejor modelo sklearn&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">loc</span><span class="o">=</span><span class="s2">&quot;lower right&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/f21b99a9f0e9ae270165bfdff58c637cfa9f415974a78f39855b235169060155.png" src="../_images/f21b99a9f0e9ae270165bfdff58c637cfa9f415974a78f39855b235169060155.png" />
+</div>
+</div>
+<p>La curva ROC del mejor modelo en la iteración 5 alcanza un AUC de 0.7346, ubicándose claramente por encima de la diagonal de referencia (clasificador aleatorio, AUC=0.5), lo que indica una capacidad de discriminación moderada entre clics y no clics. Se optó por graficar únicamente la curva del mejor modelo, y no las de las 18 combinaciones del grid search, porque la tabla de resultados ya resume cuantitativamente el desempeño de cada una (AUC, F1, recall); dado que varias combinaciones arrojaron valores prácticamente idénticos.</p>
+</section>
+<section id="interpretabilidad-con-lime">
+<h2>Interpretabilidad con LIME<a class="headerlink" href="#interpretabilidad-con-lime" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">lime</span>
+<span class="kn">import</span> <span class="nn">lime.lime_tabular</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="n">nombres_features</span> <span class="o">=</span> <span class="n">preprocessor</span><span class="o">.</span><span class="n">get_feature_names_out</span><span class="p">()</span>
+
+<span class="n">explainer</span> <span class="o">=</span> <span class="n">lime</span><span class="o">.</span><span class="n">lime_tabular</span><span class="o">.</span><span class="n">LimeTabularExplainer</span><span class="p">(</span>
+    <span class="n">training_data</span><span class="o">=</span><span class="n">X_train_proc</span><span class="p">,</span>
+    <span class="n">feature_names</span><span class="o">=</span><span class="n">nombres_features</span><span class="p">,</span>
+    <span class="n">class_names</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;No Click&quot;</span><span class="p">,</span> <span class="s2">&quot;Click&quot;</span><span class="p">],</span>
+    <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;classification&quot;</span>
+<span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">y_pred</span> <span class="o">=</span> <span class="n">mejor_modelo</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_proc</span><span class="p">)</span>
+<span class="n">y_test_reset</span> <span class="o">=</span> <span class="n">y_test</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Un Falso Negativo</span>
+<span class="n">idx_falso_negativo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">y_pred</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_test_reset</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="c1"># Un Falso Positivo</span>
+<span class="n">idx_falso_positivo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">y_pred</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_test_reset</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Índice del Falso Negativo elegido: </span><span class="si">{</span><span class="n">idx_falso_negativo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Índice del Falso Positivo elegido: </span><span class="si">{</span><span class="n">idx_falso_positivo</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Índice del Falso Negativo elegido: 11
+Índice del Falso Positivo elegido: 19
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">matplotlib.patches</span> <span class="k">as</span> <span class="nn">mpatches</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+
+<span class="c1"># Colores pastel</span>
+<span class="n">COLOR_CLICK</span>    <span class="o">=</span> <span class="s2">&quot;#F4A9A8&quot;</span>  <span class="c1"># empuja hacia &quot;Click&quot;</span>
+<span class="n">COLOR_NO_CLICK</span> <span class="o">=</span> <span class="s2">&quot;#A8D8EA&quot;</span>  <span class="c1"># empuja hacia &quot;No Click&quot;</span>
+
+<span class="n">MODEL_NAME</span> <span class="o">=</span> <span class="s2">&quot;MLP (sklearn)&quot;</span>
+
+<span class="n">y_test_reset</span> <span class="o">=</span> <span class="n">y_test</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">y_pred</span> <span class="o">=</span> <span class="n">mejor_modelo</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_test_proc</span><span class="p">)</span>
+<span class="n">y_prob</span> <span class="o">=</span> <span class="n">mejor_modelo</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test_proc</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="c1"># Solo los 2 casos que pide el enunciado: instancias mal clasificadas</span>
+<span class="n">idx_falso_negativo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">y_pred</span> <span class="o">==</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_test_reset</span> <span class="o">==</span> <span class="mi">1</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">idx_falso_positivo</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">where</span><span class="p">((</span><span class="n">y_pred</span> <span class="o">==</span> <span class="mi">1</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">y_test_reset</span> <span class="o">==</span> <span class="mi">0</span><span class="p">))[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+
+<span class="n">casos</span> <span class="o">=</span> <span class="p">{</span>
+    <span class="s2">&quot;Falso Negativo&quot;</span><span class="p">:</span> <span class="n">idx_falso_negativo</span><span class="p">,</span>
+    <span class="s2">&quot;Falso Positivo&quot;</span><span class="p">:</span> <span class="n">idx_falso_positivo</span><span class="p">,</span>
+<span class="p">}</span>
+
+<span class="k">def</span> <span class="nf">plot_lime</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">titulo</span><span class="p">,</span> <span class="n">ax</span><span class="p">,</span> <span class="n">n_features</span><span class="o">=</span><span class="mi">10</span><span class="p">):</span>
+    <span class="n">instancia</span> <span class="o">=</span> <span class="n">X_test_proc</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span>
+
+    <span class="n">exp</span> <span class="o">=</span> <span class="n">explainer</span><span class="o">.</span><span class="n">explain_instance</span><span class="p">(</span>
+        <span class="n">data_row</span>     <span class="o">=</span> <span class="n">instancia</span><span class="p">,</span>
+        <span class="n">predict_fn</span>   <span class="o">=</span> <span class="n">mejor_modelo</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">,</span>
+        <span class="n">num_features</span> <span class="o">=</span> <span class="n">n_features</span><span class="p">,</span>
+        <span class="n">num_samples</span>  <span class="o">=</span> <span class="mi">5000</span><span class="p">,</span>
+        <span class="n">labels</span>       <span class="o">=</span> <span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span>
+    <span class="p">)</span>
+
+    <span class="n">label_disponible</span> <span class="o">=</span> <span class="mi">1</span> <span class="k">if</span> <span class="mi">1</span> <span class="ow">in</span> <span class="n">exp</span><span class="o">.</span><span class="n">local_exp</span> <span class="k">else</span> <span class="nb">list</span><span class="p">(</span><span class="n">exp</span><span class="o">.</span><span class="n">local_exp</span><span class="o">.</span><span class="n">keys</span><span class="p">())[</span><span class="mi">0</span><span class="p">]</span>
+    <span class="n">pesos</span> <span class="o">=</span> <span class="n">exp</span><span class="o">.</span><span class="n">as_list</span><span class="p">(</span><span class="n">label</span><span class="o">=</span><span class="n">label_disponible</span><span class="p">)</span>
+
+    <span class="n">labels</span>  <span class="o">=</span> <span class="p">[</span><span class="n">f</span> <span class="k">for</span> <span class="n">f</span><span class="p">,</span> <span class="n">_</span> <span class="ow">in</span> <span class="n">pesos</span><span class="p">]</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">w</span> <span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">pesos</span><span class="p">]</span>
+    <span class="n">colors</span>  <span class="o">=</span> <span class="p">[</span><span class="n">COLOR_CLICK</span> <span class="k">if</span> <span class="n">w</span> <span class="o">&gt;</span> <span class="mi">0</span> <span class="k">else</span> <span class="n">COLOR_NO_CLICK</span> <span class="k">for</span> <span class="n">w</span> <span class="ow">in</span> <span class="n">weights</span><span class="p">]</span>
+
+    <span class="n">orden</span>   <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">argsort</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">abs</span><span class="p">(</span><span class="n">weights</span><span class="p">))</span>
+    <span class="n">labels</span>  <span class="o">=</span> <span class="p">[</span><span class="n">labels</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">orden</span><span class="p">]</span>
+    <span class="n">weights</span> <span class="o">=</span> <span class="p">[</span><span class="n">weights</span><span class="p">[</span><span class="n">i</span><span class="p">]</span> <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">orden</span><span class="p">]</span>
+    <span class="n">colors</span>  <span class="o">=</span> <span class="p">[</span><span class="n">colors</span><span class="p">[</span><span class="n">i</span><span class="p">]</span>  <span class="k">for</span> <span class="n">i</span> <span class="ow">in</span> <span class="n">orden</span><span class="p">]</span>
+
+    <span class="n">ax</span><span class="o">.</span><span class="n">barh</span><span class="p">(</span><span class="n">labels</span><span class="p">,</span> <span class="n">weights</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="n">colors</span><span class="p">,</span> <span class="n">edgecolor</span><span class="o">=</span><span class="s2">&quot;none&quot;</span><span class="p">,</span> <span class="n">height</span><span class="o">=</span><span class="mf">0.65</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">axvline</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#aaa&quot;</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mf">0.8</span><span class="p">,</span> <span class="n">linestyle</span><span class="o">=</span><span class="s2">&quot;--&quot;</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="n">titulo</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s2">&quot;Contribución a la probabilidad de Click&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">9</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;top&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">spines</span><span class="p">[</span><span class="s2">&quot;right&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">set_visible</span><span class="p">(</span><span class="kc">False</span><span class="p">)</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">tick_params</span><span class="p">(</span><span class="n">axis</span><span class="o">=</span><span class="s2">&quot;y&quot;</span><span class="p">,</span> <span class="n">labelsize</span><span class="o">=</span><span class="mi">8</span><span class="p">)</span>
+
+    <span class="n">real</span> <span class="o">=</span> <span class="s2">&quot;Click&quot;</span> <span class="k">if</span> <span class="n">y_test_reset</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span> <span class="o">==</span> <span class="mi">1</span> <span class="k">else</span> <span class="s2">&quot;No Click&quot;</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="mf">0.98</span><span class="p">,</span> <span class="mf">0.02</span><span class="p">,</span>
+            <span class="sa">f</span><span class="s2">&quot;P(Click) = </span><span class="si">{</span><span class="n">y_prob</span><span class="p">[</span><span class="n">idx</span><span class="p">]</span><span class="si">:</span><span class="s2">.2%</span><span class="si">}</span><span class="se">\n</span><span class="s2">Real: </span><span class="si">{</span><span class="n">real</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+            <span class="n">transform</span><span class="o">=</span><span class="n">ax</span><span class="o">.</span><span class="n">transAxes</span><span class="p">,</span> <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;right&quot;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s2">&quot;bottom&quot;</span><span class="p">,</span>
+            <span class="n">fontsize</span><span class="o">=</span><span class="mf">8.5</span><span class="p">,</span> <span class="n">color</span><span class="o">=</span><span class="s2">&quot;#444&quot;</span><span class="p">,</span>
+            <span class="n">bbox</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">boxstyle</span><span class="o">=</span><span class="s2">&quot;round,pad=0.3&quot;</span><span class="p">,</span> <span class="n">fc</span><span class="o">=</span><span class="s2">&quot;white&quot;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.75</span><span class="p">))</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="n">axes</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">2</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">13</span><span class="p">,</span> <span class="mi">7</span><span class="p">))</span>
+
+<span class="k">for</span> <span class="n">ax</span><span class="p">,</span> <span class="p">(</span><span class="n">titulo</span><span class="p">,</span> <span class="n">idx</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">zip</span><span class="p">(</span><span class="n">axes</span><span class="p">,</span> <span class="n">casos</span><span class="o">.</span><span class="n">items</span><span class="p">()):</span>
+    <span class="n">plot_lime</span><span class="p">(</span><span class="n">idx</span><span class="p">,</span> <span class="n">titulo</span><span class="p">,</span> <span class="n">ax</span><span class="p">)</span>
+
+<span class="n">patch_push</span>    <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">COLOR_CLICK</span><span class="p">,</span>    <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Empuja hacia Click&quot;</span><span class="p">)</span>
+<span class="n">patch_protect</span> <span class="o">=</span> <span class="n">mpatches</span><span class="o">.</span><span class="n">Patch</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="n">COLOR_NO_CLICK</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s2">&quot;Empuja hacia No Click&quot;</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">legend</span><span class="p">(</span><span class="n">handles</span><span class="o">=</span><span class="p">[</span><span class="n">patch_push</span><span class="p">,</span> <span class="n">patch_protect</span><span class="p">],</span>
+           <span class="n">loc</span><span class="o">=</span><span class="s2">&quot;upper center&quot;</span><span class="p">,</span> <span class="n">ncol</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span>
+           <span class="n">bbox_to_anchor</span><span class="o">=</span><span class="p">(</span><span class="mf">0.5</span><span class="p">,</span> <span class="mf">1.05</span><span class="p">),</span> <span class="n">framealpha</span><span class="o">=</span><span class="mf">0.8</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">suptitle</span><span class="p">(</span>
+    <span class="sa">f</span><span class="s2">&quot;Explicaciones LIME — </span><span class="si">{</span><span class="n">MODEL_NAME</span><span class="si">}</span><span class="s2"> (Predicción de Click)&quot;</span><span class="p">,</span>
+    <span class="n">fontsize</span><span class="o">=</span><span class="mi">14</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">1.1</span>
+<span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">savefig</span><span class="p">(</span><span class="s2">&quot;../data/lime_explanations.png&quot;</span><span class="p">,</span> <span class="n">dpi</span><span class="o">=</span><span class="mi">150</span><span class="p">,</span> <span class="n">bbox_inches</span><span class="o">=</span><span class="s2">&quot;tight&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/c5caef44924e18dd0150694d9424ecc8a297d8117103716b0d1be415f594b9e6.png" src="../_images/c5caef44924e18dd0150694d9424ecc8a297d8117103716b0d1be415f594b9e6.png" />
+</div>
+</div>
+<p>Las explicaciones LIME para las dos instancias mal clasificadas muestran que el modelo se apoya mayoritariamente en variables relacionadas con ‘site_domain’, ‘app_domain’, ‘app_category’, ‘site_category’ y ‘app_id’ para tomar su decisión, lo que confirma que el contexto de la app o sitio donde se muestra el anuncio es el factor más determinante en la predicción. En el falso negativo, aunque las diez variables más influyentes empujan hacia “Click”, su efecto combinado solo alcanza una probabilidad de 31.72%, insuficiente para superar el umbral de 0.5 y detectar el click real. En el falso positivo ocurre lo inverso: las mismas variables generan una probabilidad alta (70.30%) sin que el click ocurriera realmente, lo que sugiere que ciertas combinaciones de categorías pueden sobreestimar el interés del usuario incluso cuando no se materializa en un click. En ambos casos, las variables identificadas por LIME son consistentes con las señales contextuales esperadas del dominio del problema, aunque el modelo aún tiene dificultad para calibrar correctamente la magnitud de su confianza.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">joblib</span>
+<span class="kn">from</span> <span class="nn">sklearn.metrics</span> <span class="kn">import</span> <span class="n">roc_curve</span><span class="p">,</span> <span class="n">auc</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+
+
+<span class="n">mejor_modelo</span> <span class="o">=</span> <span class="n">joblib</span><span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;../checkpoints/mlp_gridsearch/mlp_iter5.pkl&quot;</span><span class="p">)</span>
+
+<span class="n">y_proba</span> <span class="o">=</span> <span class="n">mejor_modelo</span><span class="o">.</span><span class="n">predict_proba</span><span class="p">(</span><span class="n">X_test_proc</span><span class="p">)[:,</span> <span class="mi">1</span><span class="p">]</span>
+
+<span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">,</span> <span class="n">_</span> <span class="o">=</span> <span class="n">roc_curve</span><span class="p">(</span><span class="n">y_test</span><span class="p">,</span> <span class="n">y_proba</span><span class="p">)</span>  <span class="c1"># y_proba ya lo tenías de la celda de la curva ROC</span>
+<span class="n">roc_auc_sklearn</span> <span class="o">=</span> <span class="n">auc</span><span class="p">(</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="p">)</span>
+
+<span class="n">np</span><span class="o">.</span><span class="n">savez</span><span class="p">(</span><span class="s2">&quot;../models/roc_curve_sklearn.npz&quot;</span><span class="p">,</span> <span class="n">fpr</span><span class="o">=</span><span class="n">fpr</span><span class="p">,</span> <span class="n">tpr</span><span class="o">=</span><span class="n">tpr</span><span class="p">,</span> <span class="n">auc</span><span class="o">=</span><span class="n">roc_auc_sklearn</span><span class="p">)</span>
+<span class="nb">print</span><span class="p">(</span><span class="s2">&quot;Curva ROC de sklearn guardada.&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Curva ROC de sklearn guardada.
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="01_eda.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Introducción al Proyecto: Predicción de Tasa de Clics (CTR) en Publicidad Móvil</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="03_Pyspark.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Modelado con Pyspark</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-de-datos">Carga de Datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#ingenieria-de-caracteristicas-temporales">Ingeniería de características temporales</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#muestreo-de-los-datos">Muestreo de los datos</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#informacion-del-dataset-resultante">Información del dataset resultante</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#preprocesamiento">Preprocesamiento</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#seleccion-de-variables-relevantes">Selección de variables relevantes</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#division-de-train-test-estratificada">Division de train/test estratificada</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#codificacion-escalado">Codificación + escalado</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#definicion-del-entrenamiento">Definición del entrenamiento</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#proceso-de-entrenamiento"><strong>Proceso de entrenamiento</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tabla-de-resultados-del-entrenamiento">Tabla de resultados del entrenamiento</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matriz-de-confusion">Matriz de confusión</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#curva-roc">Curva ROC</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#interpretabilidad-con-lime">Interpretabilidad con LIME</a></li>
+</ul>
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Natalia Alvarado y Sergio Rada
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>

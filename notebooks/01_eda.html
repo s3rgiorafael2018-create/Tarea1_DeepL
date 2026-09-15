@@ -1,0 +1,2046 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Introducción al Proyecto: Predicción de Tasa de Clics (CTR) en Publicidad Móvil &#8212; Predicción de Clicks en Publicidad Móvil</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../_static/pygments.css" />
+    <link rel="stylesheet" href="../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../" id="documentation_options" src="../_static/documentation_options.js"></script>
+    <script src="../_static/jquery.js"></script>
+    <script src="../_static/underscore.js"></script>
+    <script src="../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../_static/doctools.js"></script>
+    <script src="../_static/clipboard.min.js"></script>
+    <script src="../_static/copybutton.js"></script>
+    <script src="../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../_static/sphinx-thebe.js"></script>
+    <script>window.MathJax = {"options": {"processHtmlClass": "tex2jax_process|mathjax_process|math|output_area"}}</script>
+    <script defer="defer" src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/01_eda';</script>
+    <link rel="index" title="Index" href="../genindex.html" />
+    <link rel="search" title="Search" href="../search.html" />
+    <link rel="next" title="Modelado con Scikit-Learn" href="02_sklearn_mlp.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="#">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../_static/logoUN.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../_static/logoUN.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1 current active">
+                <a class="reference internal" href="#">
+                    Introducción al Proyecto: Predicción de Tasa de Clics (CTR) en Publicidad Móvil
+                </a>
+            </li>
+        </ul>
+        <ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="02_sklearn_mlp.html">2. Modelado con Scikit-Learn</a></li>
+<li class="toctree-l1"><a class="reference internal" href="03_Pyspark.html">Modelado con Pyspark</a></li>
+
+<li class="toctree-l1"><a class="reference internal" href="04_Comparaci%C3%B3n.html">Comparación de resultados</a></li>
+
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-source-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Source repositories">
+    <i class="fab fa-github"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://github.com/s3rgiorafael2018-create/Tarea1_DeepL" target="_blank"
+   class="btn btn-sm btn-source-repository-button dropdown-item"
+   title="Source repository"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+<span class="btn__text-container">Repository</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://github.com/s3rgiorafael2018-create/Tarea1_DeepL/issues/new?title=Issue%20on%20page%20%2Fnotebooks/01_eda.html&body=Your%20issue%20content%20here." target="_blank"
+   class="btn btn-sm btn-source-issues-button dropdown-item"
+   title="Open an issue"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-lightbulb"></i>
+  </span>
+<span class="btn__text-container">Open issue</span>
+</a>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../_sources/notebooks/01_eda.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Introducción al Proyecto: Predicción de Tasa de Clics (CTR) en Publicidad Móvil</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Introducción al Proyecto: Predicción de Tasa de Clics (CTR) en Publicidad Móvil</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objetivo-general">Objetivo General</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#objetivos-especificos">Objetivos Especificos</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-exploratorio-de-datos">Análisis Exploratorio de Datos</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#descripcion-de-los-campos-principales">Descripción de los campos principales:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-de-datos">Carga de datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-de-la-variable-de-respuesta-click">Análisis de la variable de respuesta (Click)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tipos-de-datos">Tipos de Datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#identificacion-de-valores-faltantes">Identificación de valores faltantes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-de-cardinalidad-de-las-variables-categoricas">Análisis de cardinalidad de las variables categóricas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transformacion-de-la-variable-hour">Transformación de la variable Hour</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grafico-de-las-variables-creadas">Gráfico de las variables creadas</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grafico-de-frecuencia-de-las-principales-variables-categoricas">Gráfico de frecuencia de las principales variables Categóricas</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c16">C16</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c15">C15</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c1">C1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#banner-pos">banner_pos</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#device-type">device_type</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c18">C18</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#device-conn-type">device_conn_type</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-de-frecuencia-de-las-demas-variables-categoricas">Análisis de frecuencia de las demás variables Categóricas</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variables-de-alta-cardinalidad-device-ip-device-id-app-id-device-model-site-domain-site-id-c14"><strong>Variables de Alta Cardinalidad (device_ip, device_id, app_id, device_model, site_domain, site_id, C14)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variables-de-media-cardinalidad-app-domain-c17-c20-c19-c21-app-category-site-category"><strong>Variables de Media Cardinalidad (app_domain, C17, C20, C19, C21, app_category, site_category)</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-clics-por-hora-del-dia">Distribución de clics por hora del día</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matriz-de-correlacion-para-variables-numericas-creadas">Matriz de correlación para variables numéricas creadas</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="introduccion-al-proyecto-prediccion-de-tasa-de-clics-ctr-en-publicidad-movil">
+<h1>Introducción al Proyecto: Predicción de Tasa de Clics (CTR) en Publicidad Móvil<a class="headerlink" href="#introduccion-al-proyecto-prediccion-de-tasa-de-clics-ctr-en-publicidad-movil" title="Permalink to this heading">#</a></h1>
+<p>El proyecto Avazu Click-Through Rate Prediction aborda uno de los grandes desafíos de la publicidad digital masiva: estimar la probabilidad de que un usuario haga clic en un anuncio móvil (click = 1) o no (click = 0) a partir de un conjunto de datos de más de 40 millones de registros. Para resolver esta tarea de clasificación supervisada, se construirá y optimizará un Perceptrón Multicapa (MLP / Red Neuronal Multicapa), contrastando técnicamente el rendimiento y los tiempos de cómputo entre un enfoque local sobre una muestra de 1 millón de datos en scikit-learn y un procesamiento distribuido a escala completa en PySpark. Finalmente, el trabajo integra la técnica de explicabilidad LIME (Local Interpretable Model-agnostic Explanations) para auditar las predicciones individuales del modelo, identificando qué características contextuales y del dispositivo influyen en la decisión final de la red neuronal.</p>
+<section id="objetivo-general">
+<h2>Objetivo General<a class="headerlink" href="#objetivo-general" title="Permalink to this heading">#</a></h2>
+<p>Desarrollar un pipeline completo de Machine Learning supervisado utilizando un Perceptrón Multicapa (MLP / Red Neuronal Multicapa) para clasificar si una impresión resultará en clic (1) o no (0).</p>
+<section id="objetivos-especificos">
+<h3>Objetivos Especificos<a class="headerlink" href="#objetivos-especificos" title="Permalink to this heading">#</a></h3>
+<ul class="simple">
+<li><p>Preparar los datos masivos en PySpark mediante análisis exploratorio, transformación de variables temporales y preparación de muestras para el entrenamiento.</p></li>
+<li><p>Entrenar y optimizar modelos MLP en PySpark y scikit-learn, comparando su rendimiento (ROC AUC, F1-score) y tiempos de cómputo.</p></li>
+<li><p>Interpretar las predicciones individuales del modelo usando LIME para identificar las variables de mayor impacto en los casos clasificados erróneamente.</p></li>
+</ul>
+</section>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="analisis-exploratorio-de-datos">
+<h1>Análisis Exploratorio de Datos<a class="headerlink" href="#analisis-exploratorio-de-datos" title="Permalink to this heading">#</a></h1>
+<p>Inicialmente se procederá con el análisis del dataset y sus características, junto al estudio de las variables consideradas más relevantes para el desarrollo del modelo. Este Dataset tiene un aproximado de 40 millones de datos, por tanto, para el siguiente análisis se usará PySpark y el conjunto de test ya establecido.</p>
+<p>Esta es una base de datos proveniente de la competencia Avazu Click-Through Rate Prediction alojada en la plataforma Kaggle. Contiene información recopilada durante 10 días sobre impresiones de publicidad en dispositivos móviles, registrando si el usuario interactuó con el anuncio (click = 1) o no (click = 0) para evaluar el rendimiento de los modelos en un escenario real de publicidad digital.</p>
+<ul class="simple">
+<li><p><strong>Fuente de los datos: Kaggle</strong> <a class="reference external" href="https://www.kaggle.com/competitions/avazu-ctr-prediction/data">https://www.kaggle.com/competitions/avazu-ctr-prediction/data</a></p></li>
+</ul>
+<section id="descripcion-de-los-campos-principales">
+<h2>Descripción de los campos principales:<a class="headerlink" href="#descripcion-de-los-campos-principales" title="Permalink to this heading">#</a></h2>
+<ul class="simple">
+<li><p>id: identificador del anuncio</p></li>
+<li><p>click: indicador de si hubo clic</p></li>
+<li><p>hour: hora de la impresión del anuncio (formato YYMMDDHH)</p></li>
+<li><p>C1: variable categórica anonimizada</p></li>
+<li><p>banner_pos</p></li>
+<li><p>site_id, site_domain, site_category</p></li>
+<li><p>app_id, app_domain, app_category</p></li>
+<li><p>device_id, device_ip, device_model</p></li>
+<li><p>device_type, device_conn_type</p></li>
+<li><p>C14–C21: variables categóricas anónimas</p></li>
+</ul>
+</section>
+<section id="carga-de-datos">
+<h2>Carga de datos<a class="headerlink" href="#carga-de-datos" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">from</span> <span class="nn">pyspark.sql</span> <span class="kn">import</span> <span class="n">SparkSession</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">pyspark.sql.functions</span> <span class="k">as</span> <span class="nn">F</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">pandas</span> <span class="k">as</span> <span class="nn">pd</span>
+<span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
+<span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
+<span class="kn">from</span> <span class="nn">plotly.subplots</span> <span class="kn">import</span> <span class="n">make_subplots</span>
+<span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">from</span> <span class="nn">pyspark.ml.stat</span> <span class="kn">import</span> <span class="n">Correlation</span>
+<span class="kn">from</span> <span class="nn">pyspark.ml.feature</span> <span class="kn">import</span> <span class="n">VectorAssembler</span>
+<span class="kn">import</span> <span class="nn">os</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Carga del Dataset </span>
+<span class="n">spark</span> <span class="o">=</span> <span class="n">SparkSession</span><span class="o">.</span><span class="n">builder</span> \
+    <span class="o">.</span><span class="n">appName</span><span class="p">(</span><span class="s2">&quot;Avazu_EDA&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.driver.memory&quot;</span><span class="p">,</span> <span class="s2">&quot;16g&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.executor.memory&quot;</span><span class="p">,</span> <span class="s2">&quot;16g&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.driver.maxResultSize&quot;</span><span class="p">,</span> <span class="s2">&quot;0&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">config</span><span class="p">(</span><span class="s2">&quot;spark.sql.shuffle.partitions&quot;</span><span class="p">,</span> <span class="s2">&quot;32&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">getOrCreate</span><span class="p">()</span>
+<span class="n">df_train</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;csv&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;inferSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;../data/train.csv&quot;</span><span class="p">)</span>
+<span class="n">df_test</span> <span class="o">=</span> <span class="n">spark</span><span class="o">.</span><span class="n">read</span><span class="o">.</span><span class="n">format</span><span class="p">(</span><span class="s2">&quot;csv&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;header&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">option</span><span class="p">(</span><span class="s2">&quot;inferSchema&quot;</span><span class="p">,</span> <span class="s2">&quot;true&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">load</span><span class="p">(</span><span class="s2">&quot;../data/test.csv&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+<p><strong>Visualización inicial del dataset</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_train</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>+--------------------+-----+--------+----+----------+--------+-----------+-------------+--------+----------+------------+---------+---------+------------+-----------+----------------+-----+---+---+----+---+---+------+---+
+|                  id|click|    hour|  C1|banner_pos| site_id|site_domain|site_category|  app_id|app_domain|app_category|device_id|device_ip|device_model|device_type|device_conn_type|  C14|C15|C16| C17|C18|C19|   C20|C21|
++--------------------+-----+--------+----+----------+--------+-----------+-------------+--------+----------+------------+---------+---------+------------+-----------+----------------+-----+---+---+----+---+---+------+---+
+| 1000009418151094273|    0|14102100|1005|         0|1fbe01fe|   f3845767|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| ddd2926e|    44956a24|          1|               2|15706|320| 50|1722|  0| 35|    -1| 79|
+|10000169349117863715|    0|14102100|1005|         0|1fbe01fe|   f3845767|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| 96809ac8|    711ee120|          1|               0|15704|320| 50|1722|  0| 35|100084| 79|
+|10000371904215119486|    0|14102100|1005|         0|1fbe01fe|   f3845767|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| b3cf8def|    8a4875bd|          1|               0|15704|320| 50|1722|  0| 35|100084| 79|
+|10000640724480838376|    0|14102100|1005|         0|1fbe01fe|   f3845767|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| e8275b8f|    6332421a|          1|               0|15706|320| 50|1722|  0| 35|100084| 79|
+|10000679056417042096|    0|14102100|1005|         1|fe8cc448|   9166c161|     0569f928|ecad2386|  7801e8d9|    07d7df22| a99f214a| 9644d0bf|    779d90c2|          1|               0|18993|320| 50|2161|  0| 35|    -1|157|
+|10000720757801103869|    0|14102100|1005|         0|d6137915|   bb1ef334|     f028772b|ecad2386|  7801e8d9|    07d7df22| a99f214a| 05241af0|    8a4875bd|          1|               0|16920|320| 50|1899|  0|431|100077|117|
+|10000724729988544911|    0|14102100|1005|         0|8fda644b|   25d4cfcd|     f028772b|ecad2386|  7801e8d9|    07d7df22| a99f214a| b264c159|    be6db1d7|          1|               0|20362|320| 50|2333|  0| 39|    -1|157|
+|10000918755742328737|    0|14102100|1005|         1|e151e245|   7e091613|     f028772b|ecad2386|  7801e8d9|    07d7df22| a99f214a| e6f67278|    be74e6fe|          1|               0|20632|320| 50|2374|  3| 39|    -1| 23|
+|10000949271186029916|    1|14102100|1005|         0|1fbe01fe|   f3845767|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| 37e8da74|    5db079b5|          1|               2|15707|320| 50|1722|  0| 35|    -1| 79|
+|10001264480619467364|    0|14102100|1002|         0|84c7ba46|   c4e18dd6|     50e219e0|ecad2386|  7801e8d9|    07d7df22| c357dbff| f1ac7184|    373ecbe6|          0|               0|21689|320| 50|2496|  3|167|100191| 23|
++--------------------+-----+--------+----+----------+--------+-----------+-------------+--------+----------+------------+---------+---------+------------+-----------+----------------+-----+---+---+----+---+---+------+---+
+only showing top 10 rows
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_test</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>+--------------------+--------+----+----------+--------+-----------+-------------+--------+----------+------------+---------+---------+------------+-----------+----------------+-----+---+---+----+---+---+------+---+
+|                  id|    hour|  C1|banner_pos| site_id|site_domain|site_category|  app_id|app_domain|app_category|device_id|device_ip|device_model|device_type|device_conn_type|  C14|C15|C16| C17|C18|C19|   C20|C21|
++--------------------+--------+----+----------+--------+-----------+-------------+--------+----------+------------+---------+---------+------------+-----------+----------------+-----+---+---+----+---+---+------+---+
+|10000174058809263569|14103100|1005|         0|235ba823|   f6ebf28e|     f028772b|ecad2386|  7801e8d9|    07d7df22| a99f214a| 69f45779|    0eb711ec|          1|               0| 8330|320| 50| 761|  3|175|100075| 23|
+|10000182526920855428|14103100|1005|         0|1fbe01fe|   f3845767|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| e8d44657|    ecb851b2|          1|               0|22676|320| 50|2616|  0| 35|100083| 51|
+|10000554139829213984|14103100|1005|         0|1fbe01fe|   f3845767|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| 10fb085b|    1f0bc64f|          1|               0|22676|320| 50|2616|  0| 35|100083| 51|
+|10001094637809798845|14103100|1005|         0|85f751fd|   c4e18dd6|     50e219e0|51cedd4e|  aefc06bd|    0f2161f8| a99f214a| 422d257a|    542422a7|          1|               0|18648|320| 50|1092|  3|809|100156| 61|
+|10001377041558670745|14103100|1005|         0|85f751fd|   c4e18dd6|     50e219e0|9c13b419|  2347f47a|    f95efa07| a99f214a| 078c6b38|    1f0bc64f|          1|               0|23160|320| 50|2667|  0| 47|    -1|221|
+|10001521204153353724|14103100|1005|         1|57fe1b20|   5b626596|     f028772b|ecad2386|  7801e8d9|    07d7df22| a99f214a| e75922ff|    68b6db2c|          1|               0| 6563|320| 50| 572|  2| 39|    -1| 32|
+|10001911056707023378|14103100|1005|         0|1fbe01fe|   f3845767|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| f1e8683d|    d4897fef|          1|               0|22813|320| 50|2647|  2| 39|100148| 23|
+|10001982898844213216|14103100|1005|         0|85f751fd|   c4e18dd6|     50e219e0|388d9bfb|  2347f47a|    cef3e649| 3772665a| a4a540c1|    a2140f4f|          1|               3|23214|300|250|2675|  3|939|100058|100|
+|10002000217531288531|14103100|1005|         0|543a539e|   c7ca3108|     3e814130|ecad2386|  7801e8d9|    07d7df22| a99f214a| dc17d849|    ac9ad752|          1|               0|23642|320| 50|2709|  3| 39|    -1| 23|
+|10002107385290585663|14103100|1005|         0|1fbe01fe|   f3845767|     28905ebd|ecad2386|  7801e8d9|    07d7df22| a99f214a| feb189df|    8a4875bd|          1|               0|15699|320| 50|1722|  0| 35|    -1| 79|
++--------------------+--------+----+----------+--------+-----------+-------------+--------+----------+------------+---------+---------+------------+-----------+----------------+-----+---+---+----+---+---+------+---+
+only showing top 10 rows
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="analisis-de-la-variable-de-respuesta-click">
+<h2>Análisis de la variable de respuesta (Click)<a class="headerlink" href="#analisis-de-la-variable-de-respuesta-click" title="Permalink to this heading">#</a></h2>
+<p>Primero se hace un análisis del conteo total de cada categoria (click=1 y no click=0 ), frecuencia y proporción.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># Total de registros en train</span>
+<span class="n">total_rows</span> <span class="o">=</span> <span class="n">df_train</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+
+<span class="c1"># Conteo y distribución porcentual</span>
+<span class="n">click_dist</span> <span class="o">=</span> <span class="n">df_train</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+        <span class="n">F</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;conteo&quot;</span><span class="p">),</span>
+        <span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span> <span class="o">/</span> <span class="n">total_rows</span> <span class="o">*</span> <span class="mi">100</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">)</span>
+    <span class="p">)</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">round</span><span class="p">(</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">,</span> <span class="mi">2</span><span class="p">))</span>
+
+<span class="n">click_dist</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>+-----+--------+----------+
+|click|  conteo|porcentaje|
++-----+--------+----------+
+|    1| 6865066|     16.98|
+|    0|33563901|     83.02|
++-----+--------+----------+
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">import</span> <span class="nn">seaborn</span> <span class="k">as</span> <span class="nn">sns</span>
+
+<span class="c1"># 1. Convertir la agregación de PySpark a Pandas DataFrame</span>
+<span class="n">pdf_click</span> <span class="o">=</span> <span class="n">click_dist</span><span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+
+<span class="c1"># Configuración del estilo visual</span>
+<span class="n">sns</span><span class="o">.</span><span class="n">set_theme</span><span class="p">(</span><span class="n">style</span><span class="o">=</span><span class="s2">&quot;whitegrid&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+
+<span class="c1"># 2. Crear el gráfico de barras</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span>
+    <span class="n">data</span><span class="o">=</span><span class="n">pdf_click</span><span class="p">,</span> 
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;click&quot;</span><span class="p">,</span> 
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;conteo&quot;</span><span class="p">,</span> 
+    <span class="n">palette</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;#4C72B0&quot;</span><span class="p">,</span> <span class="s2">&quot;#55A868&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># 3. Personalización del gráfico</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribución de la Variable Objetivo (Click)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Estado de Clic (0 = No, 1 = Sí)&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Cantidad de Impresiones&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xticks</span><span class="p">(</span><span class="n">ticks</span><span class="o">=</span><span class="p">[</span><span class="mi">0</span><span class="p">,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">labels</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;No Clic (0)&quot;</span><span class="p">,</span> <span class="s2">&quot;Clic (1)&quot;</span><span class="p">])</span>
+
+<span class="c1"># 4. Asignar el porcentaje correcto a cada posición</span>
+<span class="k">for</span> <span class="n">_</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">pdf_click</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">posicion_x</span> <span class="o">=</span> <span class="nb">int</span><span class="p">(</span><span class="n">row</span><span class="p">[</span><span class="s2">&quot;click&quot;</span><span class="p">])</span>  <span class="c1"># Usar el valor real de click (0 o 1) como coordenada X</span>
+    <span class="n">porcentaje</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">]</span>
+    <span class="n">conteo</span> <span class="o">=</span> <span class="n">row</span><span class="p">[</span><span class="s2">&quot;conteo&quot;</span><span class="p">]</span>
+    
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span>
+        <span class="n">posicion_x</span><span class="p">,</span> 
+        <span class="n">conteo</span> <span class="o">+</span> <span class="p">(</span><span class="n">total_rows</span> <span class="o">*</span> <span class="mf">0.01</span><span class="p">),</span> 
+        <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">porcentaje</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">,</span> 
+        <span class="n">ha</span><span class="o">=</span><span class="s2">&quot;center&quot;</span><span class="p">,</span> 
+        <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> 
+        <span class="n">fontweight</span><span class="o">=</span><span class="s2">&quot;bold&quot;</span>
+    <span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/82d888328bd187fa9da00b5cbc7cf0997417a1900f274c03c15e062daac67a09.png" src="../_images/82d888328bd187fa9da00b5cbc7cf0997417a1900f274c03c15e062daac67a09.png" />
+</div>
+</div>
+<p>El análisis sobre el conjunto de datos de entrenamiento evidencia un desbalance de clases significativo, característico de los problemas de predicción de tasa de clics (CTR) en publicidad digital. Del total de impresiones registradas, aproximadamente 33.5 millones (83.02%) corresponden a interacciones donde el usuario no hizo clic (click = 0), mientras que únicamente 6.8 millones (16.98%) resultaron en un clic efectivo (click = 1), estableciendo la tasa global de conversión del dataset en un 16.98%.</p>
+<p>Este desequilibrio implica que un modelo ingenuo que prediga siempre la clase mayoritaria alcanzaría un Accuracy del 83.02% sin aportar ningún valor predictivo real. Por lo tanto, durante el modelado con el Perceptrón Multicapa (MLP) será fundamental descartar el Accuracy como métrica principal y priorizar ROC AUC, Precision, Recall y F1-Score. Asimismo, esta desproporción justifica la evaluación de técnicas de ponderación de clases (class weighting) o balanceo en las fases de preprocesamiento para evitar que la red neuronal se sesgue hacia la clase negativa.</p>
+</section>
+<section id="tipos-de-datos">
+<h2>Tipos de Datos<a class="headerlink" href="#tipos-de-datos" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">df_test</span><span class="o">.</span><span class="n">printSchema</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>root
+ |-- id: decimal(20,0) (nullable = true)
+ |-- hour: integer (nullable = true)
+ |-- C1: integer (nullable = true)
+ |-- banner_pos: integer (nullable = true)
+ |-- site_id: string (nullable = true)
+ |-- site_domain: string (nullable = true)
+ |-- site_category: string (nullable = true)
+ |-- app_id: string (nullable = true)
+ |-- app_domain: string (nullable = true)
+ |-- app_category: string (nullable = true)
+ |-- device_id: string (nullable = true)
+ |-- device_ip: string (nullable = true)
+ |-- device_model: string (nullable = true)
+ |-- device_type: integer (nullable = true)
+ |-- device_conn_type: integer (nullable = true)
+ |-- C14: integer (nullable = true)
+ |-- C15: integer (nullable = true)
+ |-- C16: integer (nullable = true)
+ |-- C17: integer (nullable = true)
+ |-- C18: integer (nullable = true)
+ |-- C19: integer (nullable = true)
+ |-- C20: integer (nullable = true)
+ |-- C21: integer (nullable = true)
+</pre></div>
+</div>
+</div>
+</div>
+<p>Los dataset las variables se clasifican de la siguiente manera:</p>
+<ul class="simple">
+<li><p>id: Decimal(20,0)</p></li>
+<li><p>hour: Integer</p></li>
+<li><p>C1: Integer</p></li>
+<li><p>banner_pos: Integer</p></li>
+<li><p>site_id: String</p></li>
+<li><p>site_domain: String</p></li>
+<li><p>site_category: String</p></li>
+<li><p>app_id: String</p></li>
+<li><p>app_domain: String</p></li>
+<li><p>app_category: String</p></li>
+<li><p>device_id: String</p></li>
+<li><p>device_ip: String</p></li>
+<li><p>device_model: String</p></li>
+<li><p>device_type: Integer</p></li>
+<li><p>device_conn_type: Integer</p></li>
+<li><p>C14: Integer</p></li>
+<li><p>C15: Integer</p></li>
+<li><p>C16: Integer</p></li>
+<li><p>C17: Integer</p></li>
+<li><p>C18: Integer</p></li>
+<li><p>C19: Integer</p></li>
+<li><p>C20: Integer</p></li>
+<li><p>C21: Integer</p></li>
+</ul>
+<p>Nótese que las variables categóricas son convertidas a enteros, tal es el caso C1, C14, etc. Por tanto, es necesario hacer un análisis más exhaustivo de cada característica.</p>
+</section>
+<section id="identificacion-de-valores-faltantes">
+<h2>Identificación de valores faltantes<a class="headerlink" href="#identificacion-de-valores-faltantes" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Calcular conteo de nulos por columna en una sola pasada eficiente</span>
+<span class="n">total_rows</span> <span class="o">=</span> <span class="n">df_train</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+
+<span class="n">null_exprs</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="n">F</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">when</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">isNull</span><span class="p">()</span> <span class="o">|</span> <span class="n">F</span><span class="o">.</span><span class="n">isnan</span><span class="p">(</span><span class="n">c</span><span class="p">),</span> <span class="n">c</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> 
+    <span class="k">if</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="p">[</span><span class="s2">&quot;double&quot;</span><span class="p">,</span> <span class="s2">&quot;float&quot;</span><span class="p">]</span> 
+    <span class="k">else</span> <span class="n">F</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">when</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">isNull</span><span class="p">(),</span> <span class="n">c</span><span class="p">))</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="n">c</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">c</span><span class="p">,</span> <span class="n">dtype</span> <span class="ow">in</span> <span class="n">df_train</span><span class="o">.</span><span class="n">dtypes</span>
+<span class="p">]</span>
+
+<span class="n">null_counts_dict</span> <span class="o">=</span> <span class="n">df_train</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">null_exprs</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asDict</span><span class="p">()</span>
+
+<span class="c1"># 2. Construir DataFrame explicativo</span>
+<span class="n">null_summary</span> <span class="o">=</span> <span class="p">[]</span>
+<span class="k">for</span> <span class="n">col_name</span><span class="p">,</span> <span class="n">null_count</span> <span class="ow">in</span> <span class="n">null_counts_dict</span><span class="o">.</span><span class="n">items</span><span class="p">():</span>
+    <span class="n">null_pct</span> <span class="o">=</span> <span class="p">(</span><span class="n">null_count</span> <span class="o">/</span> <span class="n">total_rows</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+    <span class="n">null_summary</span><span class="o">.</span><span class="n">append</span><span class="p">({</span>
+        <span class="s2">&quot;Variable&quot;</span><span class="p">:</span> <span class="n">col_name</span><span class="p">,</span>
+        <span class="s2">&quot;Cantidad_Nulos&quot;</span><span class="p">:</span> <span class="n">null_count</span><span class="p">,</span>
+        <span class="s2">&quot;Porcentaje_Nulos (%)&quot;</span><span class="p">:</span> <span class="nb">round</span><span class="p">(</span><span class="n">null_pct</span><span class="p">,</span> <span class="mi">4</span><span class="p">)</span>
+    <span class="p">})</span>
+
+<span class="n">df_nulls_summary</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">null_summary</span><span class="p">)</span>
+
+<span class="c1"># Mostrar el resultado tabular</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total de registros analizados: </span><span class="si">{</span><span class="n">total_rows</span><span class="si">:</span><span class="s2">,</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+<span class="n">df_nulls_summary</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total de registros analizados: 40,428,967
+</pre></div>
+</div>
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Variable</th>
+      <th>Cantidad_Nulos</th>
+      <th>Porcentaje_Nulos (%)</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>id</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>click</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>hour</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>C1</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>banner_pos</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>site_id</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>site_domain</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>site_category</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>app_id</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>app_domain</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>app_category</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>device_id</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>device_ip</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>device_model</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>device_type</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>device_conn_type</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>C14</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>C15</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>C16</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>C17</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>C18</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>21</th>
+      <td>C19</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>22</th>
+      <td>C20</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+    <tr>
+      <th>23</th>
+      <td>C21</td>
+      <td>0</td>
+      <td>0.0</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Gracias a lo anterior, se puede observar que no existen valores faltantes del tipo null o NaN. Sin embargo, es muy inusual este comportamiento en dataset reales, por tanto, en análisis posteriores se analizará cada variable para saber su comportamiento y si los valores nulos están registrados con algún valor como negativos o cadenas.</p>
+</section>
+<section id="analisis-de-cardinalidad-de-las-variables-categoricas">
+<h2>Análisis de cardinalidad de las variables categóricas<a class="headerlink" href="#analisis-de-cardinalidad-de-las-variables-categoricas" title="Permalink to this heading">#</a></h2>
+<p>Se realizará el siguiente análisis con el fin de evaluar la cantidad de valores únicos que posee cada variable categórica dentro de un conjunto de datos. Su objetivo principal es clasificar las variables en baja cardinalidad (pocas categorías, como el tipo de dispositivo) y alta cardinalidad (miles o millones de IDs únicos, como el identificador del dispositivo); con el fin de definir más adelante la estrategia de codificación adecuada, tal como One-Hot-Encoding o agrupamiento con Top-K.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Definir la lista de variables categóricas del dataset</span>
+<span class="n">cat_cols</span> <span class="o">=</span> <span class="p">[</span>
+    <span class="s2">&quot;site_id&quot;</span><span class="p">,</span> <span class="s2">&quot;site_domain&quot;</span><span class="p">,</span> <span class="s2">&quot;site_category&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;app_id&quot;</span><span class="p">,</span> <span class="s2">&quot;app_domain&quot;</span><span class="p">,</span> <span class="s2">&quot;app_category&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;device_id&quot;</span><span class="p">,</span> <span class="s2">&quot;device_ip&quot;</span><span class="p">,</span> <span class="s2">&quot;device_model&quot;</span><span class="p">,</span> 
+    <span class="s2">&quot;device_type&quot;</span><span class="p">,</span> <span class="s2">&quot;device_conn_type&quot;</span><span class="p">,</span> <span class="s2">&quot;banner_pos&quot;</span><span class="p">,</span> <span class="s2">&quot;C1&quot;</span><span class="p">,</span>
+    <span class="s2">&quot;C14&quot;</span><span class="p">,</span><span class="s2">&quot;C15&quot;</span><span class="p">,</span> <span class="s2">&quot;C16&quot;</span><span class="p">,</span><span class="s2">&quot;C17&quot;</span><span class="p">,</span><span class="s2">&quot;C18&quot;</span><span class="p">,</span><span class="s2">&quot;C19&quot;</span><span class="p">,</span><span class="s2">&quot;C20&quot;</span><span class="p">,</span><span class="s2">&quot;C21&quot;</span>
+<span class="p">]</span>
+
+<span class="c1"># 2. Calcular la cardinalidad (valores únicos) en PySpark en un solo pase</span>
+<span class="n">cardinality_exprs</span> <span class="o">=</span> <span class="p">[</span><span class="n">F</span><span class="o">.</span><span class="n">countDistinct</span><span class="p">(</span><span class="n">c</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="n">c</span><span class="p">)</span> <span class="k">for</span> <span class="n">c</span> <span class="ow">in</span> <span class="n">cat_cols</span><span class="p">]</span>
+<span class="n">cardinality_dict</span> <span class="o">=</span> <span class="n">df_train</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">cardinality_exprs</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()[</span><span class="mi">0</span><span class="p">]</span><span class="o">.</span><span class="n">asDict</span><span class="p">()</span>
+
+<span class="c1"># 3. Formatear y ordenar los resultados en un DataFrame de Pandas</span>
+<span class="n">df_cardinality</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span>
+    <span class="nb">list</span><span class="p">(</span><span class="n">cardinality_dict</span><span class="o">.</span><span class="n">items</span><span class="p">()),</span> 
+    <span class="n">columns</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;Variable&quot;</span><span class="p">,</span> <span class="s2">&quot;Valores_Unicos&quot;</span><span class="p">]</span>
+<span class="p">)</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="n">by</span><span class="o">=</span><span class="s2">&quot;Valores_Unicos&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="c1"># Agregar clasificación según el nivel de cardinalidad</span>
+<span class="n">df_cardinality</span><span class="p">[</span><span class="s2">&quot;Tipo_Cardinalidad&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_cardinality</span><span class="p">[</span><span class="s2">&quot;Valores_Unicos&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span>
+    <span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="s2">&quot;Alta (&gt;1000)&quot;</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;</span> <span class="mi">1000</span> <span class="k">else</span> <span class="p">(</span><span class="s2">&quot;Media (10-1000)&quot;</span> <span class="k">if</span> <span class="n">x</span> <span class="o">&gt;=</span> <span class="mi">10</span> <span class="k">else</span> <span class="s2">&quot;Baja (&lt;10)&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">df_cardinality</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output text_html"><div>
+<style scoped>
+    .dataframe tbody tr th:only-of-type {
+        vertical-align: middle;
+    }
+
+    .dataframe tbody tr th {
+        vertical-align: top;
+    }
+
+    .dataframe thead th {
+        text-align: right;
+    }
+</style>
+<table border="1" class="dataframe">
+  <thead>
+    <tr style="text-align: right;">
+      <th></th>
+      <th>Variable</th>
+      <th>Valores_Unicos</th>
+      <th>Tipo_Cardinalidad</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <th>0</th>
+      <td>device_ip</td>
+      <td>6729486</td>
+      <td>Alta (&gt;1000)</td>
+    </tr>
+    <tr>
+      <th>1</th>
+      <td>device_id</td>
+      <td>2686408</td>
+      <td>Alta (&gt;1000)</td>
+    </tr>
+    <tr>
+      <th>2</th>
+      <td>app_id</td>
+      <td>8552</td>
+      <td>Alta (&gt;1000)</td>
+    </tr>
+    <tr>
+      <th>3</th>
+      <td>device_model</td>
+      <td>8251</td>
+      <td>Alta (&gt;1000)</td>
+    </tr>
+    <tr>
+      <th>4</th>
+      <td>site_domain</td>
+      <td>7745</td>
+      <td>Alta (&gt;1000)</td>
+    </tr>
+    <tr>
+      <th>5</th>
+      <td>site_id</td>
+      <td>4737</td>
+      <td>Alta (&gt;1000)</td>
+    </tr>
+    <tr>
+      <th>6</th>
+      <td>C14</td>
+      <td>2626</td>
+      <td>Alta (&gt;1000)</td>
+    </tr>
+    <tr>
+      <th>7</th>
+      <td>app_domain</td>
+      <td>559</td>
+      <td>Media (10-1000)</td>
+    </tr>
+    <tr>
+      <th>8</th>
+      <td>C17</td>
+      <td>435</td>
+      <td>Media (10-1000)</td>
+    </tr>
+    <tr>
+      <th>9</th>
+      <td>C20</td>
+      <td>172</td>
+      <td>Media (10-1000)</td>
+    </tr>
+    <tr>
+      <th>10</th>
+      <td>C19</td>
+      <td>68</td>
+      <td>Media (10-1000)</td>
+    </tr>
+    <tr>
+      <th>11</th>
+      <td>C21</td>
+      <td>60</td>
+      <td>Media (10-1000)</td>
+    </tr>
+    <tr>
+      <th>12</th>
+      <td>app_category</td>
+      <td>36</td>
+      <td>Media (10-1000)</td>
+    </tr>
+    <tr>
+      <th>13</th>
+      <td>site_category</td>
+      <td>26</td>
+      <td>Media (10-1000)</td>
+    </tr>
+    <tr>
+      <th>14</th>
+      <td>C16</td>
+      <td>9</td>
+      <td>Baja (&lt;10)</td>
+    </tr>
+    <tr>
+      <th>15</th>
+      <td>C15</td>
+      <td>8</td>
+      <td>Baja (&lt;10)</td>
+    </tr>
+    <tr>
+      <th>16</th>
+      <td>C1</td>
+      <td>7</td>
+      <td>Baja (&lt;10)</td>
+    </tr>
+    <tr>
+      <th>17</th>
+      <td>banner_pos</td>
+      <td>7</td>
+      <td>Baja (&lt;10)</td>
+    </tr>
+    <tr>
+      <th>18</th>
+      <td>device_type</td>
+      <td>5</td>
+      <td>Baja (&lt;10)</td>
+    </tr>
+    <tr>
+      <th>19</th>
+      <td>C18</td>
+      <td>4</td>
+      <td>Baja (&lt;10)</td>
+    </tr>
+    <tr>
+      <th>20</th>
+      <td>device_conn_type</td>
+      <td>4</td>
+      <td>Baja (&lt;10)</td>
+    </tr>
+  </tbody>
+</table>
+</div></div></div>
+</div>
+<p>Existen 14 variables categóricas que necesitan más cuidado por su alta y media cardinalidad, por lo cual, en la transformación y preprocesamiento de los datos se realiarán diferentes técnicas para mitigar los efectos la cardinalidad.</p>
+</section>
+<section id="transformacion-de-la-variable-hour">
+<h2>Transformación de la variable Hour<a class="headerlink" href="#transformacion-de-la-variable-hour" title="Permalink to this heading">#</a></h2>
+<p>Se desea transformar la variable “hour” en nuevas características temporales (día, hora y franja horaria), dado que, por si sola la variable no da mucha información a la red neuronal haciendola más compleja. Por tanto, se da paso a la siguiente transformación:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">unique_hour</span> <span class="o">=</span> <span class="n">df_train</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">countDistinct</span><span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">collect</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total de horas distintas: </span><span class="si">{</span><span class="n">unique_hour</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total de horas distintas: 240
+</pre></div>
+</div>
+</div>
+</div>
+<p>Existen 140 categorías diferentes en “hour”.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Convertir &#39;hour&#39; a String para extracción de caracteres</span>
+<span class="n">df_train_1</span> <span class="o">=</span> <span class="n">df_train</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;hour_str&quot;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">))</span>
+
+<span class="c1"># 2. Extraer día, hora del día y construir la franja horaria directamente</span>
+<span class="n">df_transformed</span> <span class="o">=</span> <span class="n">df_train_1</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;day&quot;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="s2">&quot;hour_str&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="s2">&quot;hour_str&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span>
+        <span class="s2">&quot;franja_horaria&quot;</span><span class="p">,</span>
+        <span class="n">F</span><span class="o">.</span><span class="n">when</span><span class="p">((</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">),</span> <span class="s2">&quot;Madrugada&quot;</span><span class="p">)</span>
+         <span class="o">.</span><span class="n">when</span><span class="p">((</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">6</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">12</span><span class="p">),</span> <span class="s2">&quot;Mañana&quot;</span><span class="p">)</span>
+         <span class="o">.</span><span class="n">when</span><span class="p">((</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">12</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">18</span><span class="p">),</span> <span class="s2">&quot;Tarde&quot;</span><span class="p">)</span>
+         <span class="o">.</span><span class="n">otherwise</span><span class="p">(</span><span class="s2">&quot;Noche&quot;</span><span class="p">)</span>
+    <span class="p">)</span> \
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;hour_str&quot;</span><span class="p">)</span>
+
+<span class="c1"># Mostrar las columnas seleccionadas</span>
+<span class="n">df_transformed</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">,</span> <span class="s2">&quot;day&quot;</span><span class="p">,</span> <span class="s2">&quot;hour_of_day&quot;</span><span class="p">,</span> <span class="s2">&quot;franja_horaria&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">show</span><span class="p">(</span><span class="mi">5</span><span class="p">)</span>
+
+<span class="c1"># transformación para df_test</span>
+
+<span class="n">df_train_2</span> <span class="o">=</span> <span class="n">df_test</span><span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;hour_str&quot;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;string&quot;</span><span class="p">))</span>
+<span class="n">df_transformed_test</span> <span class="o">=</span> <span class="n">df_train_1</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;day&quot;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="s2">&quot;hour_str&quot;</span><span class="p">,</span> <span class="mi">5</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">,</span> <span class="n">F</span><span class="o">.</span><span class="n">substring</span><span class="p">(</span><span class="s2">&quot;hour_str&quot;</span><span class="p">,</span> <span class="mi">7</span><span class="p">,</span> <span class="mi">2</span><span class="p">)</span><span class="o">.</span><span class="n">cast</span><span class="p">(</span><span class="s2">&quot;integer&quot;</span><span class="p">))</span> \
+    <span class="o">.</span><span class="n">withColumn</span><span class="p">(</span>
+        <span class="s2">&quot;franja_horaria&quot;</span><span class="p">,</span>
+        <span class="n">F</span><span class="o">.</span><span class="n">when</span><span class="p">((</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">0</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">6</span><span class="p">),</span> <span class="s2">&quot;Madrugada&quot;</span><span class="p">)</span>
+         <span class="o">.</span><span class="n">when</span><span class="p">((</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">6</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">12</span><span class="p">),</span> <span class="s2">&quot;Mañana&quot;</span><span class="p">)</span>
+         <span class="o">.</span><span class="n">when</span><span class="p">((</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&gt;=</span> <span class="mi">12</span><span class="p">)</span> <span class="o">&amp;</span> <span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> <span class="o">&lt;</span> <span class="mi">18</span><span class="p">),</span> <span class="s2">&quot;Tarde&quot;</span><span class="p">)</span>
+         <span class="o">.</span><span class="n">otherwise</span><span class="p">(</span><span class="s2">&quot;Noche&quot;</span><span class="p">)</span>
+    <span class="p">)</span> \
+    <span class="o">.</span><span class="n">drop</span><span class="p">(</span><span class="s2">&quot;hour_str&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>+--------+---+-----------+--------------+
+|    hour|day|hour_of_day|franja_horaria|
++--------+---+-----------+--------------+
+|14102100| 21|          0|     Madrugada|
+|14102100| 21|          0|     Madrugada|
+|14102100| 21|          0|     Madrugada|
+|14102100| 21|          0|     Madrugada|
+|14102100| 21|          0|     Madrugada|
++--------+---+-----------+--------------+
+only showing top 5 rows
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">unique_dias</span> <span class="o">=</span> <span class="n">df_transformed</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">countDistinct</span><span class="p">(</span><span class="s2">&quot;day&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">collect</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total de días distintos: </span><span class="si">{</span><span class="n">unique_dias</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total de días distintos: 10
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">unique_hour_of_day</span> <span class="o">=</span> <span class="n">df_transformed</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">countDistinct</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">collect</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total de horas distintas: </span><span class="si">{</span><span class="n">unique_hour_of_day</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total de horas distintas: 24
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">unique_franja_horaria</span> <span class="o">=</span> <span class="n">df_transformed</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">countDistinct</span><span class="p">(</span><span class="s2">&quot;franja_horaria&quot;</span><span class="p">))</span><span class="o">.</span><span class="n">collect</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="nb">print</span><span class="p">(</span><span class="sa">f</span><span class="s2">&quot;Total de franjas horarias: </span><span class="si">{</span><span class="n">unique_franja_horaria</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>Total de franjas horarias: 4
+</pre></div>
+</div>
+</div>
+</div>
+<p>Descomponer la variable hour en day, hour_of_day y franja_horaria transforma un entero continuo y rígido (YYMMDDHH) en señales temporales interpretables para el Perceptrón Multicapa. Esto elimina discontinuidades numéricas falsas (como el salto entre un día y otro) y permite al modelo capturar de forma directa los patrones de comportamiento humano a lo largo de las rutinas diarias y los días de la semana, reduciendo además el ruido y la dimensionalidad de los datos.</p>
+<section id="grafico-de-las-variables-creadas">
+<h3>Gráfico de las variables creadas<a class="headerlink" href="#grafico-de-las-variables-creadas" title="Permalink to this heading">#</a></h3>
+<p><strong>Histrograma de la variable Día y Hora del día</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">plotly.express</span> <span class="k">as</span> <span class="nn">px</span>
+<span class="kn">from</span> <span class="nn">plotly.subplots</span> <span class="kn">import</span> <span class="n">make_subplots</span>
+<span class="kn">import</span> <span class="nn">plotly.graph_objects</span> <span class="k">as</span> <span class="nn">go</span>
+
+<span class="c1"># 1. Extraer la muestra</span>
+<span class="n">df_time_sample</span> <span class="o">=</span> <span class="n">df_transformed</span><span class="o">.</span><span class="n">select</span><span class="p">(</span><span class="s2">&quot;day&quot;</span><span class="p">,</span> <span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">sample</span><span class="p">(</span><span class="n">withReplacement</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span> <span class="n">fraction</span><span class="o">=</span><span class="mf">0.05</span><span class="p">,</span> <span class="n">seed</span><span class="o">=</span><span class="mi">42</span><span class="p">)</span><span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+
+<span class="c1"># 2. Agrupar conteos para alimentar el gráfico interactivo</span>
+<span class="n">df_hour_counts</span> <span class="o">=</span> <span class="n">df_time_sample</span><span class="p">[</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">df_hour_counts</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">]</span>
+<span class="n">df_hour_counts</span> <span class="o">=</span> <span class="n">df_hour_counts</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span>
+
+<span class="n">df_day_counts</span> <span class="o">=</span> <span class="n">df_time_sample</span><span class="p">[</span><span class="s2">&quot;day&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">value_counts</span><span class="p">()</span><span class="o">.</span><span class="n">reset_index</span><span class="p">()</span>
+<span class="n">df_day_counts</span><span class="o">.</span><span class="n">columns</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;day&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">]</span>
+<span class="n">df_day_counts</span> <span class="o">=</span> <span class="n">df_day_counts</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s2">&quot;day&quot;</span><span class="p">)</span>
+
+<span class="c1"># 3. Crear figura interactiva con subplots</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">make_subplots</span><span class="p">(</span>
+    <span class="n">rows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">cols</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> 
+    <span class="n">subplot_titles</span><span class="o">=</span><span class="p">(</span><span class="s2">&quot;Distribución por Hora del Día (0 - 23)&quot;</span><span class="p">,</span> <span class="s2">&quot;Distribución por Día del Mes&quot;</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="c1"># Barra para Hora del Día</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+    <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">df_hour_counts</span><span class="p">[</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">],</span> 
+        <span class="n">y</span><span class="o">=</span><span class="n">df_hour_counts</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">],</span>
+        <span class="n">marker_color</span><span class="o">=</span><span class="s2">&quot;#4C72B0&quot;</span><span class="p">,</span>
+        <span class="n">hovertemplate</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;Hora del día:&lt;/b&gt; %</span><span class="si">{x}</span><span class="s2">&lt;br&gt;&lt;b&gt;Impresiones:&lt;/b&gt; %</span><span class="si">{y:,.0f}</span><span class="s2">&lt;extra&gt;&lt;/extra&gt;&quot;</span>
+    <span class="p">),</span>
+    <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span>
+<span class="p">)</span>
+
+<span class="c1"># Barra para Día del Mes</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+    <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">df_day_counts</span><span class="p">[</span><span class="s2">&quot;day&quot;</span><span class="p">],</span> 
+        <span class="n">y</span><span class="o">=</span><span class="n">df_day_counts</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">],</span>
+        <span class="n">marker_color</span><span class="o">=</span><span class="s2">&quot;#55A868&quot;</span><span class="p">,</span>
+        <span class="n">hovertemplate</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;Día de octubre:&lt;/b&gt; %</span><span class="si">{x}</span><span class="s2">&lt;br&gt;&lt;b&gt;Impresiones:&lt;/b&gt; %</span><span class="si">{y:,.0f}</span><span class="s2">&lt;extra&gt;&lt;/extra&gt;&quot;</span>
+    <span class="p">),</span>
+    <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">2</span>
+<span class="p">)</span>
+
+<span class="c1"># 4. Ajustes de layout</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">400</span><span class="p">,</span> 
+    <span class="n">width</span><span class="o">=</span><span class="mi">900</span><span class="p">,</span> 
+    <span class="n">showlegend</span><span class="o">=</span><span class="kc">False</span><span class="p">,</span>
+    <span class="n">title_text</span><span class="o">=</span><span class="s2">&quot;Análisis Temporal de Impresiones (Muestra)&quot;</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">&quot;Hora del Día&quot;</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">dtick</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">&quot;Frecuencia (Impresiones)&quot;</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_xaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">&quot;Día del Mes (Octubre)&quot;</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">dtick</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">&quot;Frecuencia (Impresiones)&quot;</span><span class="p">,</span> <span class="n">row</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">col</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<p><strong>Diagrama de barras de la variable Franja Horaria</strong></p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Agrupar y contar en PySpark (eficiente para 40M de filas)</span>
+<span class="n">df_franja</span> <span class="o">=</span> <span class="n">df_transformed</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;franja_horaria&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span><span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+
+<span class="c1"># 2. Ordenar lógicamente las franjas</span>
+<span class="n">orden_franjas</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;Madrugada&quot;</span><span class="p">,</span> <span class="s2">&quot;Mañana&quot;</span><span class="p">,</span> <span class="s2">&quot;Tarde&quot;</span><span class="p">,</span> <span class="s2">&quot;Noche&quot;</span><span class="p">]</span>
+<span class="n">df_franja</span><span class="p">[</span><span class="s1">&#39;franja_horaria&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">Categorical</span><span class="p">(</span><span class="n">df_franja</span><span class="p">[</span><span class="s1">&#39;franja_horaria&#39;</span><span class="p">],</span> <span class="n">categories</span><span class="o">=</span><span class="n">orden_franjas</span><span class="p">,</span> <span class="n">ordered</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+<span class="n">df_franja</span> <span class="o">=</span> <span class="n">df_franja</span><span class="o">.</span><span class="n">sort_values</span><span class="p">(</span><span class="s1">&#39;franja_horaria&#39;</span><span class="p">)</span>
+
+<span class="c1"># 3. Calcular porcentaje total</span>
+<span class="n">total_impressions</span> <span class="o">=</span> <span class="n">df_franja</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">df_franja</span><span class="p">[</span><span class="s1">&#39;porcentaje&#39;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_franja</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_impressions</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="c1"># 4. Graficar</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">8</span><span class="p">,</span> <span class="mi">4</span><span class="p">))</span>
+<span class="n">ax</span> <span class="o">=</span> <span class="n">sns</span><span class="o">.</span><span class="n">barplot</span><span class="p">(</span><span class="n">data</span><span class="o">=</span><span class="n">df_franja</span><span class="p">,</span> <span class="n">x</span><span class="o">=</span><span class="s2">&quot;franja_horaria&quot;</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">palette</span><span class="o">=</span><span class="s2">&quot;Blues_d&quot;</span><span class="p">)</span>
+
+<span class="c1"># Agregar etiquetas de porcentaje sobre cada barra</span>
+<span class="k">for</span> <span class="n">i</span><span class="p">,</span> <span class="n">row</span> <span class="ow">in</span> <span class="n">df_franja</span><span class="o">.</span><span class="n">reset_index</span><span class="p">(</span><span class="n">drop</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span><span class="o">.</span><span class="n">iterrows</span><span class="p">():</span>
+    <span class="n">ax</span><span class="o">.</span><span class="n">text</span><span class="p">(</span><span class="n">i</span><span class="p">,</span> <span class="n">row</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span> <span class="o">+</span> <span class="p">(</span><span class="n">total_impressions</span> <span class="o">*</span> <span class="mf">0.01</span><span class="p">),</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">row</span><span class="p">[</span><span class="s1">&#39;porcentaje&#39;</span><span class="p">]</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">,</span> 
+            <span class="n">ha</span><span class="o">=</span><span class="s1">&#39;center&#39;</span><span class="p">,</span> <span class="n">va</span><span class="o">=</span><span class="s1">&#39;bottom&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">,</span> <span class="n">fontweight</span><span class="o">=</span><span class="s1">&#39;bold&#39;</span><span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Distribución de Impresiones por Franja Horaria&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">xlabel</span><span class="p">(</span><span class="s2">&quot;Franja Horaria&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylabel</span><span class="p">(</span><span class="s2">&quot;Total de Impresiones&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">10</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">ylim</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="n">df_franja</span><span class="p">[</span><span class="s1">&#39;count&#39;</span><span class="p">]</span><span class="o">.</span><span class="n">max</span><span class="p">()</span> <span class="o">*</span> <span class="mf">1.15</span><span class="p">)</span>  <span class="c1"># Espacio para las etiquetas</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stderr highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span>c:\Users\User\.conda\envs\dataviz_venv\lib\site-packages\seaborn\categorical.py:641: FutureWarning: The default of observed=False is deprecated and will be changed to True in a future version of pandas. Pass observed=False to retain current behavior or observed=True to adopt the future default and silence this warning.
+  grouped_vals = vals.groupby(grouper)
+</pre></div>
+</div>
+<img alt="../_images/be68d444354aeabf2cfd4ad534c7487999ad418a42cdbb8b8d161a313234edbf.png" src="../_images/be68d444354aeabf2cfd4ad534c7487999ad418a42cdbb8b8d161a313234edbf.png" />
+</div>
+</div>
+</section>
+</section>
+<section id="grafico-de-frecuencia-de-las-principales-variables-categoricas">
+<h2>Gráfico de frecuencia de las principales variables Categóricas<a class="headerlink" href="#grafico-de-frecuencia-de-las-principales-variables-categoricas" title="Permalink to this heading">#</a></h2>
+<p>En este apartado se realizarán los correspondientes gráficos a las variables que presentan una cardinalidad baja, de lo contrario, los gráficos serán poco interpretables por el gran número de categorías que tienen 14 variables antes mencionadas. De esta manera, se harán los siguientes gráficos:</p>
+<section id="c16">
+<h3>C16<a class="headerlink" href="#c16" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Agrupar y contar frecuencias directamente en PySpark (eficiente para 40M)</span>
+<span class="n">df__counts</span> <span class="o">=</span> <span class="n">df_transformed</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;C16&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">orderBy</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+
+<span class="c1"># Convertir C16 a string para forzar tratamiento categórico en el eje X</span>
+<span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;C16&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;C16&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+<span class="c1"># Calcular porcentaje del total de impresiones</span>
+<span class="n">total_impressions</span> <span class="o">=</span> <span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_impressions</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="c1"># 2. Crear gráfico de barras interactivo</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+    <span class="n">df__counts</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;C16&quot;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">),</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Distribución de Frecuencia para C16&quot;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;C16&quot;</span><span class="p">:</span> <span class="s2">&quot;Valor de C16&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="s2">&quot;Total de Impresiones&quot;</span><span class="p">},</span>
+    <span class="n">color_discrete_sequence</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;#2B5B84&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># 3. Personalizar interacción (hover/tooltip) y diseño</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+    <span class="n">textposition</span><span class="o">=</span><span class="s2">&quot;outside&quot;</span><span class="p">,</span>
+    <span class="n">hovertemplate</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;Altura (C16):&lt;/b&gt; %</span><span class="si">{x}</span><span class="s2"> px&lt;br&gt;&quot;</span> <span class="o">+</span>
+                  <span class="s2">&quot;&lt;b&gt;Impresiones:&lt;/b&gt; %</span><span class="si">{y:,.0f}</span><span class="s2">&lt;br&gt;&quot;</span> <span class="o">+</span>
+                  <span class="s2">&quot;&lt;b&gt;Porcentaje:&lt;/b&gt; %</span><span class="si">{text}</span><span class="s2">&lt;extra&gt;&lt;/extra&gt;&quot;</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">450</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">750</span><span class="p">,</span>
+    <span class="n">xaxis_type</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">,</span>
+    <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Cantidad de Impresiones&quot;</span><span class="p">,</span>
+    <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Categoría de C16&quot;</span><span class="p">,</span>
+    <span class="n">title_x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<p>La variable C16 es un atributo categórico anónimo de baja cardinalidad. Al analizar su distribución de frecuencias, se observa una fuerte concentración de impresiones en solo unas pocas categorías específicas, lo que la convierte en una candidata ideal para la transformación mediante One-Hot Encoding directo sin riesgo de dispersión de datos.</p>
+</section>
+<section id="c15">
+<h3>C15<a class="headerlink" href="#c15" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Agrupar y contar frecuencias directamente en PySpark (eficiente para 40M)</span>
+<span class="n">df__counts</span> <span class="o">=</span> <span class="n">df_transformed</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;C15&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">orderBy</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+<span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;C15&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;C15&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+<span class="c1"># Calcular porcentaje del total de impresiones</span>
+<span class="n">total_impressions</span> <span class="o">=</span> <span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_impressions</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="c1"># 2. Crear gráfico de barras interactivo</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+    <span class="n">df__counts</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;C15&quot;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">),</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Distribución de Frecuencia para C15&quot;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;C15&quot;</span><span class="p">:</span> <span class="s2">&quot;Valor de C15&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="s2">&quot;Total de Impresiones&quot;</span><span class="p">},</span>
+    <span class="n">color_discrete_sequence</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;#2B5B84&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># 3. Personalizar interacción (hover/tooltip) y diseño</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+    <span class="n">textposition</span><span class="o">=</span><span class="s2">&quot;outside&quot;</span><span class="p">,</span>
+    <span class="n">hovertemplate</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;Altura (C15):&lt;/b&gt; %</span><span class="si">{x}</span><span class="s2"> px&lt;br&gt;&quot;</span> <span class="o">+</span>
+                  <span class="s2">&quot;&lt;b&gt;Impresiones:&lt;/b&gt; %</span><span class="si">{y:,.0f}</span><span class="s2">&lt;br&gt;&quot;</span> <span class="o">+</span>
+                  <span class="s2">&quot;&lt;b&gt;Porcentaje:&lt;/b&gt; %</span><span class="si">{text}</span><span class="s2">&lt;extra&gt;&lt;/extra&gt;&quot;</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">450</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">750</span><span class="p">,</span>
+    <span class="n">xaxis_type</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">,</span>
+    <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Cantidad de Impresiones&quot;</span><span class="p">,</span>
+    <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Categoría de C15&quot;</span><span class="p">,</span>
+    <span class="n">title_x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<p>El análisis de frecuencia para la variable categórica anónima C15 muestra un sesgo pronunciado hacia un número reducido de valores, donde la categoría principal representa el 93.3% de las impresiones totales y una segunda categoría abarca el 5.8%. Dado que posee únicamente 8 niveles únicos y el 99.1% de la información se concentra en solo dos de ellos, esta variable presenta una baja cardinalidad idónea para aplicar One-Hot Encoding directo o una agrupación Top-K, permitiendo al modelo capturar la señal dominante sin incorporar dispersión innecesaria en la capa de entrada.</p>
+</section>
+<section id="c1">
+<h3>C1<a class="headerlink" href="#c1" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Agrupar y contar frecuencias directamente en PySpark (eficiente para 40M)</span>
+<span class="n">df__counts</span> <span class="o">=</span> <span class="n">df_transformed</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;C1&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">orderBy</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+<span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;C1&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;C1&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+<span class="c1"># Calcular porcentaje del total de impresiones</span>
+<span class="n">total_impressions</span> <span class="o">=</span> <span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_impressions</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="c1"># 2. Crear gráfico de barras interactivo</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+    <span class="n">df__counts</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;C1&quot;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">),</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Distribución de Frecuencia para C1&quot;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;C1&quot;</span><span class="p">:</span> <span class="s2">&quot;Valor de C1&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="s2">&quot;Total de Impresiones&quot;</span><span class="p">},</span>
+    <span class="n">color_discrete_sequence</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;#2B5B84&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># 3. Personalizar interacción (hover/tooltip) y diseño</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+    <span class="n">textposition</span><span class="o">=</span><span class="s2">&quot;outside&quot;</span><span class="p">,</span>
+    <span class="n">hovertemplate</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;Altura (C1):&lt;/b&gt; %</span><span class="si">{x}</span><span class="s2"> px&lt;br&gt;&quot;</span> <span class="o">+</span>
+                  <span class="s2">&quot;&lt;b&gt;Impresiones:&lt;/b&gt; %</span><span class="si">{y:,.0f}</span><span class="s2">&lt;br&gt;&quot;</span> <span class="o">+</span>
+                  <span class="s2">&quot;&lt;b&gt;Porcentaje:&lt;/b&gt; %</span><span class="si">{text}</span><span class="s2">&lt;extra&gt;&lt;/extra&gt;&quot;</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">450</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">750</span><span class="p">,</span>
+    <span class="n">xaxis_type</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">,</span>
+    <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Cantidad de Impresiones&quot;</span><span class="p">,</span>
+    <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Categoría de C1&quot;</span><span class="p">,</span>
+    <span class="n">title_x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<p>El análisis de frecuencia para la variable categórica anónima C1 revela una severa asimetría en su distribución, donde la categoría principal (1005) abarca el 91.9% del tráfico y solo tres valores explican el 99.6% del total. Al contar con apenas 7 categorías únicas, esta condición de baja cardinalidad permite aplicar un One-Hot Encoding directo o un agrupamiento Top-K (K=3) para simplificar las frecuencias marginales, garantizando una entrada eficiente y libre de ruido para el Perceptrón Multicapa.</p>
+</section>
+<section id="banner-pos">
+<h3>banner_pos<a class="headerlink" href="#banner-pos" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Agrupar y contar frecuencias directamente en PySpark (eficiente para 40M)</span>
+<span class="n">df__counts</span> <span class="o">=</span> <span class="n">df_transformed</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;banner_pos&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">orderBy</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+<span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;banner_pos&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;banner_pos&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+<span class="c1"># Calcular porcentaje del total de impresiones</span>
+<span class="n">total_impressions</span> <span class="o">=</span> <span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_impressions</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="c1"># 2. Crear gráfico de barras interactivo</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+    <span class="n">df__counts</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;banner_pos&quot;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">),</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Distribución de Frecuencia para banner_pos&quot;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;banner_pos&quot;</span><span class="p">:</span> <span class="s2">&quot;Valor de banner_pos&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="s2">&quot;Total de Impresiones&quot;</span><span class="p">},</span>
+    <span class="n">color_discrete_sequence</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;#2B5B84&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># 3. Personalizar interacción (hover/tooltip) y diseño</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+    <span class="n">textposition</span><span class="o">=</span><span class="s2">&quot;outside&quot;</span><span class="p">,</span>
+    <span class="n">hovertemplate</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;Altura (banner_pos):&lt;/b&gt; %</span><span class="si">{x}</span><span class="s2"> px&lt;br&gt;&quot;</span> <span class="o">+</span>
+                  <span class="s2">&quot;&lt;b&gt;Impresiones:&lt;/b&gt; %</span><span class="si">{y:,.0f}</span><span class="s2">&lt;br&gt;&quot;</span> <span class="o">+</span>
+                  <span class="s2">&quot;&lt;b&gt;Porcentaje:&lt;/b&gt; %</span><span class="si">{text}</span><span class="s2">&lt;extra&gt;&lt;/extra&gt;&quot;</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">450</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">750</span><span class="p">,</span>
+    <span class="n">xaxis_type</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">,</span>
+    <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Cantidad de Impresiones&quot;</span><span class="p">,</span>
+    <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Categoría de C1&quot;</span><span class="p">,</span>
+    <span class="n">title_x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<p>El análisis de frecuencia para la variable banner_pos muestra una fuerte concentración en solo dos valores, donde la categoría 0 domina con el 72.0% de las impresiones y la 1 abarca el 27.8%, sumando entre ambas el 99.8% del tráfico total. Al contar únicamente con 7 niveles únicos y una presencia casi nula en las categorías restantes (7, 2, 4, 5, 3), esta condición de baja cardinalidad justifica el uso de One-Hot Encoding directo o una agrupación Top-K (K=2) para eliminar la dispersión provocada por las posiciones de ultra-baja frecuencia antes de alimentar el Perceptrón Multicapa.</p>
+</section>
+<section id="device-type">
+<h3>device_type<a class="headerlink" href="#device-type" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Agrupar y contar frecuencias directamente en PySpark (eficiente para 40M)</span>
+<span class="n">df__counts</span> <span class="o">=</span> <span class="n">df_transformed</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;device_type&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">orderBy</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+<span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;device_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;device_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+<span class="c1"># Calcular porcentaje del total de impresiones</span>
+<span class="n">total_impressions</span> <span class="o">=</span> <span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_impressions</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="c1"># 2. Crear gráfico de barras interactivo</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+    <span class="n">df__counts</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;device_type&quot;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">),</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Distribución de Frecuencia para device_type&quot;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;device_type&quot;</span><span class="p">:</span> <span class="s2">&quot;Valor de device_type&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="s2">&quot;Total de Impresiones&quot;</span><span class="p">},</span>
+    <span class="n">color_discrete_sequence</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;#2B5B84&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># 3. Personalizar interacción (hover/tooltip) y diseño</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+    <span class="n">textposition</span><span class="o">=</span><span class="s2">&quot;outside&quot;</span><span class="p">,</span>
+    <span class="n">hovertemplate</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;Altura (device_type):&lt;/b&gt; %</span><span class="si">{x}</span><span class="s2"> px&lt;br&gt;&quot;</span> <span class="o">+</span>
+                  <span class="s2">&quot;&lt;b&gt;Impresiones:&lt;/b&gt; %</span><span class="si">{y:,.0f}</span><span class="s2">&lt;br&gt;&quot;</span> <span class="o">+</span>
+                  <span class="s2">&quot;&lt;b&gt;Porcentaje:&lt;/b&gt; %</span><span class="si">{text}</span><span class="s2">&lt;extra&gt;&lt;/extra&gt;&quot;</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">450</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">750</span><span class="p">,</span>
+    <span class="n">xaxis_type</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">,</span>
+    <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Cantidad de Impresiones&quot;</span><span class="p">,</span>
+    <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Categoría de C1&quot;</span><span class="p">,</span>
+    <span class="n">title_x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<p>El análisis de frecuencia para device_type evidencia una marcada asimetría en su distribución, donde la categoría 1 domina con el 92.3% del tráfico y la 0 abarca un 5.5%, acumulando juntas el 97.8% del volumen total. Al contar con solo 5 valores únicos y una representación marginal en las categorías restantes (4 con 1.9%, 5 con 0.3% y 2 con 0.0%), esta condición de baja cardinalidad respalda el uso de One-Hot Encoding directo o una agrupación Top-K (K=2 o K=3) para consolidar los niveles infrecuentes y evitar ruido en la capa de entrada del Perceptrón Multicapa.</p>
+</section>
+<section id="c18">
+<h3>C18<a class="headerlink" href="#c18" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Agrupar y contar frecuencias directamente en PySpark (eficiente para 40M)</span>
+<span class="n">df__counts</span> <span class="o">=</span> <span class="n">df_transformed</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;C18&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">orderBy</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+<span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;C18&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;C18&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+<span class="c1"># Calcular porcentaje del total de impresiones</span>
+<span class="n">total_impressions</span> <span class="o">=</span> <span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_impressions</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="c1"># 2. Crear gráfico de barras interactivo</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+    <span class="n">df__counts</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;C18&quot;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">),</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Distribución de Frecuencia para C18&quot;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;C18&quot;</span><span class="p">:</span> <span class="s2">&quot;Valor de C18&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="s2">&quot;Total de Impresiones&quot;</span><span class="p">},</span>
+    <span class="n">color_discrete_sequence</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;#2B5B84&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># 3. Personalizar interacción (hover/tooltip) y diseño</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+    <span class="n">textposition</span><span class="o">=</span><span class="s2">&quot;outside&quot;</span><span class="p">,</span>
+    <span class="n">hovertemplate</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;Altura (C18):&lt;/b&gt; %</span><span class="si">{x}</span><span class="s2"> px&lt;br&gt;&quot;</span> <span class="o">+</span>
+                  <span class="s2">&quot;&lt;b&gt;Impresiones:&lt;/b&gt; %</span><span class="si">{y:,.0f}</span><span class="s2">&lt;br&gt;&quot;</span> <span class="o">+</span>
+                  <span class="s2">&quot;&lt;b&gt;Porcentaje:&lt;/b&gt; %</span><span class="si">{text}</span><span class="s2">&lt;extra&gt;&lt;/extra&gt;&quot;</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">450</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">750</span><span class="p">,</span>
+    <span class="n">xaxis_type</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">,</span>
+    <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Cantidad de Impresiones&quot;</span><span class="p">,</span>
+    <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Categoría de C1&quot;</span><span class="p">,</span>
+    <span class="n">title_x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<p>El análisis de frecuencia para la variable anónima C18 muestra una distribución más equilibrada entre sus 4 categorías únicas, donde la categoría 0 encabeza con el 41.9% de las impresiones, seguida por la 3 con un 33.8%, la 2 con un 17.6% y la 1 con un 6.7%. Al tratarse de una variable de baja cardinalidad con presencia significativa en cada uno de sus niveles, es una candidata ideal para One-Hot Encoding directo sin necesidad de agrupamientos Top-K, permitiendo al Perceptrón Multicapa capturar la variabilidad de cada categoría sin generar dispersión de datos.</p>
+</section>
+<section id="device-conn-type">
+<h3>device_conn_type<a class="headerlink" href="#device-conn-type" title="Permalink to this heading">#</a></h3>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Agrupar y contar frecuencias directamente en PySpark (eficiente para 40M)</span>
+<span class="n">df__counts</span> <span class="o">=</span> <span class="n">df_transformed</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;device_conn_type&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">count</span><span class="p">()</span> \
+    <span class="o">.</span><span class="n">orderBy</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">,</span> <span class="n">ascending</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+<span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;device_conn_type&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;device_conn_type&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+
+<span class="c1"># Calcular porcentaje del total de impresiones</span>
+<span class="n">total_impressions</span> <span class="o">=</span> <span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">sum</span><span class="p">()</span>
+<span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_impressions</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="c1"># 2. Crear gráfico de barras interactivo</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+    <span class="n">df__counts</span><span class="p">,</span>
+    <span class="n">x</span><span class="o">=</span><span class="s2">&quot;device_conn_type&quot;</span><span class="p">,</span>
+    <span class="n">y</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+    <span class="n">text</span><span class="o">=</span><span class="n">df__counts</span><span class="p">[</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">),</span>
+    <span class="n">title</span><span class="o">=</span><span class="s2">&quot;Distribución de Frecuencia para device_conn_type&quot;</span><span class="p">,</span>
+    <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;device_conn_type&quot;</span><span class="p">:</span> <span class="s2">&quot;Valor de device_conn_type&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="s2">&quot;Total de Impresiones&quot;</span><span class="p">},</span>
+    <span class="n">color_discrete_sequence</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;#2B5B84&quot;</span><span class="p">]</span>
+<span class="p">)</span>
+
+<span class="c1"># 3. Personalizar interacción (hover/tooltip) y diseño</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+    <span class="n">textposition</span><span class="o">=</span><span class="s2">&quot;outside&quot;</span><span class="p">,</span>
+    <span class="n">hovertemplate</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;Altura (device_conn_type):&lt;/b&gt; %</span><span class="si">{x}</span><span class="s2"> px&lt;br&gt;&quot;</span> <span class="o">+</span>
+                  <span class="s2">&quot;&lt;b&gt;Impresiones:&lt;/b&gt; %</span><span class="si">{y:,.0f}</span><span class="s2">&lt;br&gt;&quot;</span> <span class="o">+</span>
+                  <span class="s2">&quot;&lt;b&gt;Porcentaje:&lt;/b&gt; %</span><span class="si">{text}</span><span class="s2">&lt;extra&gt;&lt;/extra&gt;&quot;</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">450</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">750</span><span class="p">,</span>
+    <span class="n">xaxis_type</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">,</span>
+    <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Cantidad de Impresiones&quot;</span><span class="p">,</span>
+    <span class="n">xaxis_title</span><span class="o">=</span><span class="s2">&quot;Categoría de C1&quot;</span><span class="p">,</span>
+    <span class="n">title_x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<p>El análisis de frecuencia para la variable device_conn_type revela una distribución altamente concentrada en su categoría principal 0, la cual representa el 86.3% del total de impresiones, mientras que las categorías 2 y 3 capturan el 8.2% y 5.4% respectivamente. Al contar con apenas 4 valores únicos y una presencia casi insignificante en la categoría 5 (0.1%), esta baja cardinalidad respalda la aplicación de One-Hot Encoding directo o una consolidación Top-K (K=3) para omitir la categoría marginal, garantizando una representación compacta e informativa en la entrada del Perceptrón Multicapa.</p>
+</section>
+</section>
+<section id="analisis-de-frecuencia-de-las-demas-variables-categoricas">
+<h2>Análisis de frecuencia de las demás variables Categóricas<a class="headerlink" href="#analisis-de-frecuencia-de-las-demas-variables-categoricas" title="Permalink to this heading">#</a></h2>
+<p>Ahora se estudiarán las 10 categorías con mayor frecuencia en cada variable categórica con media y alta cardinalidad, con el fin de saber su estructura y formular una solución para el preprocesamiento que se hará. De esta manera, se harán los siguientes gráficos:</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Obtener el total de registros una sola vez (eficiente en PySpark)</span>
+<span class="n">total_records</span> <span class="o">=</span> <span class="n">df_transformed</span><span class="o">.</span><span class="n">count</span><span class="p">()</span>
+
+<span class="c1"># 2. Filtrar variables de Media y Alta cardinalidad según tu DataFrame de cardinalidad</span>
+<span class="n">cols_to_plot</span> <span class="o">=</span> <span class="n">df_cardinality</span><span class="p">[</span>
+    <span class="n">df_cardinality</span><span class="p">[</span><span class="s2">&quot;Tipo_Cardinalidad&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">isin</span><span class="p">([</span><span class="s2">&quot;Media (10-1000)&quot;</span><span class="p">,</span> <span class="s2">&quot;Alta (&gt;1000)&quot;</span><span class="p">])</span>
+<span class="p">][</span><span class="s2">&quot;Variable&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">tolist</span><span class="p">()</span>
+
+<span class="c1"># 3. Función para calcular el Top 10 en PySpark y graficar</span>
+<span class="k">def</span> <span class="nf">plot_top10_category</span><span class="p">(</span><span class="n">df_spark</span><span class="p">,</span> <span class="n">col_name</span><span class="p">,</span> <span class="n">total_count</span><span class="p">):</span>
+    <span class="c1"># Agrupar y extraer las 10 categorías más frecuentes</span>
+    <span class="n">df_top10</span> <span class="o">=</span> <span class="n">df_spark</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="n">col_name</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">agg</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">))</span> \
+        <span class="o">.</span><span class="n">orderBy</span><span class="p">(</span><span class="n">F</span><span class="o">.</span><span class="n">col</span><span class="p">(</span><span class="s2">&quot;count&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">desc</span><span class="p">())</span> \
+        <span class="o">.</span><span class="n">limit</span><span class="p">(</span><span class="mi">10</span><span class="p">)</span> \
+        <span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+    
+    <span class="c1"># Asegurar formato categórico y calcular porcentaje global</span>
+    <span class="n">df_top10</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_top10</span><span class="p">[</span><span class="n">col_name</span><span class="p">]</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">str</span><span class="p">)</span>
+    <span class="n">df_top10</span><span class="p">[</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="p">(</span><span class="n">df_top10</span><span class="p">[</span><span class="s2">&quot;count&quot;</span><span class="p">]</span> <span class="o">/</span> <span class="n">total_count</span><span class="p">)</span> <span class="o">*</span> <span class="mi">100</span>
+    
+    <span class="c1"># Generar gráfico interactivo con Plotly</span>
+    <span class="n">fig</span> <span class="o">=</span> <span class="n">px</span><span class="o">.</span><span class="n">bar</span><span class="p">(</span>
+        <span class="n">df_top10</span><span class="p">,</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">col_name</span><span class="p">,</span>
+        <span class="n">y</span><span class="o">=</span><span class="s2">&quot;count&quot;</span><span class="p">,</span>
+        <span class="n">text</span><span class="o">=</span><span class="n">df_top10</span><span class="p">[</span><span class="s2">&quot;porcentaje&quot;</span><span class="p">]</span><span class="o">.</span><span class="n">apply</span><span class="p">(</span><span class="k">lambda</span> <span class="n">x</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;</span><span class="si">{</span><span class="n">x</span><span class="si">:</span><span class="s2">.1f</span><span class="si">}</span><span class="s2">%&quot;</span><span class="p">),</span>
+        <span class="n">title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Distribución Top 10 Frecuencias - Variable </span><span class="si">{</span><span class="n">col_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">labels</span><span class="o">=</span><span class="p">{</span><span class="n">col_name</span><span class="p">:</span> <span class="sa">f</span><span class="s2">&quot;Categoría (</span><span class="si">{</span><span class="n">col_name</span><span class="si">}</span><span class="s2">)&quot;</span><span class="p">,</span> <span class="s2">&quot;count&quot;</span><span class="p">:</span> <span class="s2">&quot;Cantidad de Impresiones&quot;</span><span class="p">},</span>
+        <span class="n">color_discrete_sequence</span><span class="o">=</span><span class="p">[</span><span class="s2">&quot;#2B5B84&quot;</span><span class="p">]</span>
+    <span class="p">)</span>
+    
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_traces</span><span class="p">(</span>
+        <span class="n">textposition</span><span class="o">=</span><span class="s2">&quot;outside&quot;</span><span class="p">,</span>
+        <span class="n">hovertemplate</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;&lt;b&gt;</span><span class="si">{</span><span class="n">col_name</span><span class="si">}</span><span class="s2">:&lt;/b&gt; %</span><span class="se">{{</span><span class="s2">x</span><span class="se">}}</span><span class="s2">&lt;br&gt;&quot;</span> <span class="o">+</span>
+                      <span class="s2">&quot;&lt;b&gt;Impresiones:&lt;/b&gt; %</span><span class="si">{y:,.0f}</span><span class="s2">&lt;br&gt;&quot;</span> <span class="o">+</span>
+                      <span class="s2">&quot;&lt;b&gt;Porcentaje:&lt;/b&gt; %</span><span class="si">{text}</span><span class="s2">&lt;extra&gt;&lt;/extra&gt;&quot;</span>
+    <span class="p">)</span>
+    
+    <span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+        <span class="n">height</span><span class="o">=</span><span class="mi">450</span><span class="p">,</span>
+        <span class="n">width</span><span class="o">=</span><span class="mi">750</span><span class="p">,</span>
+        <span class="n">xaxis_type</span><span class="o">=</span><span class="s2">&quot;category&quot;</span><span class="p">,</span>
+        <span class="n">yaxis_title</span><span class="o">=</span><span class="s2">&quot;Cantidad de Impresiones&quot;</span><span class="p">,</span>
+        <span class="n">xaxis_title</span><span class="o">=</span><span class="sa">f</span><span class="s2">&quot;Categoría de </span><span class="si">{</span><span class="n">col_name</span><span class="si">}</span><span class="s2">&quot;</span><span class="p">,</span>
+        <span class="n">title_x</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+        <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+    <span class="p">)</span>
+    
+    <span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+
+<span class="c1"># 4. Generar gráficos para todas las variables identificadas (device_ip, device_id, app_id, etc.)</span>
+<span class="k">for</span> <span class="n">col</span> <span class="ow">in</span> <span class="n">cols_to_plot</span><span class="p">:</span>
+    <span class="n">plot_top10_category</span><span class="p">(</span><span class="n">df_transformed</span><span class="p">,</span> <span class="n">col</span><span class="p">,</span> <span class="n">total_records</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<p>Las variables de media y alta cardinalidad presentan desafíos estructurales distintos según el grado de dispersión de sus valores. A continuación se analiza cada grupo y las técnicas de preprocesamiento óptimas para preparar la entrada del Perceptrón Multicapa:</p>
+<section id="variables-de-alta-cardinalidad-device-ip-device-id-app-id-device-model-site-domain-site-id-c14">
+<h3><strong>Variables de Alta Cardinalidad (device_ip, device_id, app_id, device_model, site_domain, site_id, C14)</strong><a class="headerlink" href="#variables-de-alta-cardinalidad-device-ip-device-id-app-id-device-model-site-domain-site-id-c14" title="Permalink to this heading">#</a></h3>
+<p>Tienen desde miles hasta millones de valores únicos. Atributos como device_ip (6.7M) y device_id (2.6M) presentan una fragmentación extrema donde la mayoría de valores aparecen muy pocas veces. Otras como app_id o site_id concentran un alto porcentaje del tráfico en un Top 10 dominante, seguido de una cola muy larga de valores raros. Por tanto, se usarán las siguientes técnicas recomendadas:</p>
+<ul class="simple">
+<li><p>Eliminación directa: device_ip y device_id deben eliminarse o descartarse para la red neuronal. Generan sobreajuste masivo, agregan millones de dimensiones inútiles mediante One-Hot y impiden la generalización.</p></li>
+<li><p>Top-K Grouping (<span class="math notranslate nohighlight">\(K \in [10, 50]\)</span>) + One-Hot Encoding: Para app_id, site_id, site_domain, device_model y C14. Mantiene explícitas las categorías dominantes (que capturan la mayoría de impresiones) y consolida los miles de valores raros en una categoría residual (“Otros”).</p></li>
+</ul>
+</section>
+<section id="variables-de-media-cardinalidad-app-domain-c17-c20-c19-c21-app-category-site-category">
+<h3><strong>Variables de Media Cardinalidad (app_domain, C17, C20, C19, C21, app_category, site_category)</strong><a class="headerlink" href="#variables-de-media-cardinalidad-app-domain-c17-c20-c19-c21-app-category-site-category" title="Permalink to this heading">#</a></h3>
+<p>Tienen entre 10 y 1,000 valores únicos. La señal está distribuida en un número manejable de niveles, aunque siguen existiendo categorías marginales de muy baja frecuencia. Por tanto, se usarán las siguientes técnicas recomendadas:</p>
+<ul class="simple">
+<li><p>Top-K Grouping moderado (<span class="math notranslate nohighlight">\(K \in [10, 30]\)</span>) + One-Hot Encoding: Es la mejor estrategia para C17, C20, C19, C21, app_category y site_category. Retiene la gran mayoría de la varianza del tráfico e impide la creación de columnas vacías o ruidosas en el vector de entrada de la red.</p></li>
+<li><p>StringIndexer + One-Hot Encoding directo: Para variables en el rango más bajo como site_category (26) o app_category (36), es totalmente viable aplicar One-Hot completo a todos sus niveles sin agrupar, ya que la dimensionalidad añadida es ligera.</p></li>
+</ul>
+</section>
+</section>
+<section id="distribucion-de-clics-por-hora-del-dia">
+<h2>Distribución de clics por hora del día<a class="headerlink" href="#distribucion-de-clics-por-hora-del-dia" title="Permalink to this heading">#</a></h2>
+<p>En este gráfico se analiza la variación temporal del comportamiento del usuario a lo largo de las 24 horas del día (0 a 23), evaluando simultáneamente dos métricas complementarias:</p>
+<ul class="simple">
+<li><p>Volumen absoluto de clics (barras): Representa el conteo total de interacciones exitosas (click = 1) en cada franja horaria. Permite identificar los momentos del día con mayor volumen de actividad y demanda publicitaria.</p></li>
+<li><p>Tasa de clics / CTR (línea): Representa la proporción de clics respecto al total de impresiones generadas en esa misma hora. Permite medir la eficiencia real y la propensión del usuario a hacer clic, independientemente del volumen de tráfico.</p></li>
+</ul>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Agrupar y calcular métricas por hora en PySpark</span>
+<span class="n">df_hourly_ctr</span> <span class="o">=</span> <span class="n">df_transformed</span><span class="o">.</span><span class="n">groupBy</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">agg</span><span class="p">(</span>
+        <span class="n">F</span><span class="o">.</span><span class="n">count</span><span class="p">(</span><span class="s2">&quot;*&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;total_impresiones&quot;</span><span class="p">),</span>
+        <span class="n">F</span><span class="o">.</span><span class="n">sum</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;total_clics&quot;</span><span class="p">),</span>
+        <span class="n">F</span><span class="o">.</span><span class="n">mean</span><span class="p">(</span><span class="s2">&quot;click&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">alias</span><span class="p">(</span><span class="s2">&quot;ctr&quot;</span><span class="p">)</span>
+    <span class="p">)</span> \
+    <span class="o">.</span><span class="n">orderBy</span><span class="p">(</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">)</span> \
+    <span class="o">.</span><span class="n">toPandas</span><span class="p">()</span>
+
+<span class="c1"># Convertir la tasa CTR a porcentaje para la visualización</span>
+<span class="n">df_hourly_ctr</span><span class="p">[</span><span class="s2">&quot;ctr_pct&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="n">df_hourly_ctr</span><span class="p">[</span><span class="s2">&quot;ctr&quot;</span><span class="p">]</span> <span class="o">*</span> <span class="mi">100</span>
+
+<span class="c1"># 2. Crear gráfico interactivo con dos ejes Y</span>
+<span class="n">fig</span> <span class="o">=</span> <span class="n">make_subplots</span><span class="p">(</span><span class="n">specs</span><span class="o">=</span><span class="p">[[{</span><span class="s2">&quot;secondary_y&quot;</span><span class="p">:</span> <span class="kc">True</span><span class="p">}]])</span>
+
+<span class="c1"># Barra: Volumen de Clics (Eje Y principal)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+    <span class="n">go</span><span class="o">.</span><span class="n">Bar</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">df_hourly_ctr</span><span class="p">[</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">],</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">df_hourly_ctr</span><span class="p">[</span><span class="s2">&quot;total_clics&quot;</span><span class="p">],</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Total Clics&quot;</span><span class="p">,</span>
+        <span class="n">marker_color</span><span class="o">=</span><span class="s2">&quot;#4C72B0&quot;</span><span class="p">,</span>
+        <span class="n">hovertemplate</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;Hora:&lt;/b&gt; %</span><span class="si">{x}</span><span class="s2">:00&lt;br&gt;&lt;b&gt;Clics:&lt;/b&gt; %</span><span class="si">{y:,.0f}</span><span class="s2">&lt;extra&gt;&lt;/extra&gt;&quot;</span>
+    <span class="p">),</span>
+    <span class="n">secondary_y</span><span class="o">=</span><span class="kc">False</span>
+<span class="p">)</span>
+
+<span class="c1"># Línea: Tasa CTR % (Eje Y secundario)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">add_trace</span><span class="p">(</span>
+    <span class="n">go</span><span class="o">.</span><span class="n">Scatter</span><span class="p">(</span>
+        <span class="n">x</span><span class="o">=</span><span class="n">df_hourly_ctr</span><span class="p">[</span><span class="s2">&quot;hour_of_day&quot;</span><span class="p">],</span>
+        <span class="n">y</span><span class="o">=</span><span class="n">df_hourly_ctr</span><span class="p">[</span><span class="s2">&quot;ctr_pct&quot;</span><span class="p">],</span>
+        <span class="n">name</span><span class="o">=</span><span class="s2">&quot;Tasa CTR (%)&quot;</span><span class="p">,</span>
+        <span class="n">mode</span><span class="o">=</span><span class="s2">&quot;lines+markers&quot;</span><span class="p">,</span>
+        <span class="n">line</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">color</span><span class="o">=</span><span class="s2">&quot;#D55E00&quot;</span><span class="p">,</span> <span class="n">width</span><span class="o">=</span><span class="mi">3</span><span class="p">),</span>
+        <span class="n">marker</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">size</span><span class="o">=</span><span class="mi">7</span><span class="p">),</span>
+        <span class="n">hovertemplate</span><span class="o">=</span><span class="s2">&quot;&lt;b&gt;Hora:&lt;/b&gt; %</span><span class="si">{x}</span><span class="s2">:00&lt;br&gt;&lt;b&gt;CTR:&lt;/b&gt; %</span><span class="si">{y:.2f}</span><span class="s2">%&lt;extra&gt;&lt;/extra&gt;&quot;</span>
+    <span class="p">),</span>
+    <span class="n">secondary_y</span><span class="o">=</span><span class="kc">True</span>
+<span class="p">)</span>
+
+<span class="c1"># 3. Personalizar diseño y títulos</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_layout</span><span class="p">(</span>
+    <span class="n">title_text</span><span class="o">=</span><span class="s2">&quot;Distribución de Clics y Tasa CTR por Hora del Día (0 - 23)&quot;</span><span class="p">,</span>
+    <span class="n">height</span><span class="o">=</span><span class="mi">480</span><span class="p">,</span>
+    <span class="n">width</span><span class="o">=</span><span class="mi">850</span><span class="p">,</span>
+    <span class="n">xaxis</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">title</span><span class="o">=</span><span class="s2">&quot;Hora del Día&quot;</span><span class="p">,</span> <span class="n">dtick</span><span class="o">=</span><span class="mi">1</span><span class="p">),</span>
+    <span class="n">legend</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">x</span><span class="o">=</span><span class="mf">0.01</span><span class="p">,</span> <span class="n">y</span><span class="o">=</span><span class="mf">0.99</span><span class="p">,</span> <span class="n">bgcolor</span><span class="o">=</span><span class="s2">&quot;rgba(255,255,255,0.6)&quot;</span><span class="p">),</span>
+    <span class="n">margin</span><span class="o">=</span><span class="nb">dict</span><span class="p">(</span><span class="n">t</span><span class="o">=</span><span class="mi">50</span><span class="p">,</span> <span class="n">b</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">l</span><span class="o">=</span><span class="mi">40</span><span class="p">,</span> <span class="n">r</span><span class="o">=</span><span class="mi">40</span><span class="p">)</span>
+<span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">&quot;Cantidad Total de Clics&quot;</span><span class="p">,</span> <span class="n">secondary_y</span><span class="o">=</span><span class="kc">False</span><span class="p">)</span>
+<span class="n">fig</span><span class="o">.</span><span class="n">update_yaxes</span><span class="p">(</span><span class="n">title_text</span><span class="o">=</span><span class="s2">&quot;Tasa de Clics / CTR (%)&quot;</span><span class="p">,</span> <span class="n">secondary_y</span><span class="o">=</span><span class="kc">True</span><span class="p">)</span>
+
+<span class="n">fig</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+</div>
+</div>
+<p>El análisis de la distribución de clics por hora del día permite identificar patrones de comportamiento temporal en el tráfico publicitario. Mientras que el volumen absoluto de clics refleja la fluctuación de la demanda y las horas de mayor actividad de los usuarios (alcanzando picos durante las horas laborales y de la tarde), la tasa CTR (%) evidencia variaciones en la propensión al clic según la franja horaria. Esta ciclicidad confirma la relevancia de transformar la hora en representaciones cíclicas (mediante funciones seno/coseno) o codificar la franja horaria para que el Perceptrón Multicapa capture la interacción entre la hora del día y la probabilidad de conversión.</p>
+</section>
+<section id="matriz-de-correlacion-para-variables-numericas-creadas">
+<h2>Matriz de correlación para variables numéricas creadas<a class="headerlink" href="#matriz-de-correlacion-para-variables-numericas-creadas" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># 1. Definir las dos variables numéricas creadas y el target</span>
+<span class="n">time_cols</span> <span class="o">=</span> <span class="p">[</span><span class="s2">&quot;day&quot;</span><span class="p">,</span> <span class="s2">&quot;hour_of_day&quot;</span><span class="p">,</span> <span class="s2">&quot;click&quot;</span><span class="p">]</span>
+
+<span class="c1"># 2. Ensamblar las columnas en un vector para PySpark</span>
+<span class="n">assembler</span> <span class="o">=</span> <span class="n">VectorAssembler</span><span class="p">(</span><span class="n">inputCols</span><span class="o">=</span><span class="n">time_cols</span><span class="p">,</span> <span class="n">outputCol</span><span class="o">=</span><span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="n">handleInvalid</span><span class="o">=</span><span class="s2">&quot;skip&quot;</span><span class="p">)</span>
+<span class="n">df_vector</span> <span class="o">=</span> <span class="n">assembler</span><span class="o">.</span><span class="n">transform</span><span class="p">(</span><span class="n">df_transformed</span><span class="p">)</span>
+
+<span class="c1"># 3. Calcular la matriz de correlación de Pearson en PySpark</span>
+<span class="n">matrix</span> <span class="o">=</span> <span class="n">Correlation</span><span class="o">.</span><span class="n">corr</span><span class="p">(</span><span class="n">df_vector</span><span class="p">,</span> <span class="s2">&quot;features&quot;</span><span class="p">,</span> <span class="n">method</span><span class="o">=</span><span class="s2">&quot;pearson&quot;</span><span class="p">)</span><span class="o">.</span><span class="n">collect</span><span class="p">()[</span><span class="mi">0</span><span class="p">][</span><span class="mi">0</span><span class="p">]</span>
+<span class="n">corr_array</span> <span class="o">=</span> <span class="n">matrix</span><span class="o">.</span><span class="n">toArray</span><span class="p">()</span>
+
+<span class="c1"># 4. Convertir la matriz a un DataFrame de Pandas</span>
+<span class="n">df_corr</span> <span class="o">=</span> <span class="n">pd</span><span class="o">.</span><span class="n">DataFrame</span><span class="p">(</span><span class="n">corr_array</span><span class="p">,</span> <span class="n">index</span><span class="o">=</span><span class="n">time_cols</span><span class="p">,</span> <span class="n">columns</span><span class="o">=</span><span class="n">time_cols</span><span class="p">)</span>
+
+<span class="c1"># 5. Visualizar la Matriz de Correlación con Seaborn</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">figure</span><span class="p">(</span><span class="n">figsize</span><span class="o">=</span><span class="p">(</span><span class="mi">6</span><span class="p">,</span> <span class="mf">4.5</span><span class="p">))</span>
+<span class="n">mask</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">triu</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">ones_like</span><span class="p">(</span><span class="n">df_corr</span><span class="p">,</span> <span class="n">dtype</span><span class="o">=</span><span class="nb">bool</span><span class="p">))</span>
+
+<span class="n">sns</span><span class="o">.</span><span class="n">heatmap</span><span class="p">(</span>
+    <span class="n">df_corr</span><span class="p">,</span> 
+    <span class="n">annot</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> 
+    <span class="n">fmt</span><span class="o">=</span><span class="s2">&quot;.3f&quot;</span><span class="p">,</span> 
+    <span class="n">cmap</span><span class="o">=</span><span class="s2">&quot;Blues&quot;</span><span class="p">,</span> 
+    <span class="n">mask</span><span class="o">=</span><span class="n">mask</span><span class="p">,</span>
+    <span class="n">vmin</span><span class="o">=-</span><span class="mi">1</span><span class="p">,</span> <span class="n">vmax</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span>
+    <span class="n">linewidths</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span>
+    <span class="n">cbar_kws</span><span class="o">=</span><span class="p">{</span><span class="s2">&quot;shrink&quot;</span><span class="p">:</span> <span class="mf">.8</span><span class="p">}</span>
+<span class="p">)</span>
+
+<span class="n">plt</span><span class="o">.</span><span class="n">title</span><span class="p">(</span><span class="s2">&quot;Matriz de Correlación: day, hour_of_day y click&quot;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">11</span><span class="p">,</span> <span class="n">pad</span><span class="o">=</span><span class="mi">12</span><span class="p">)</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">tight_layout</span><span class="p">()</span>
+<span class="n">plt</span><span class="o">.</span><span class="n">show</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../_images/9fbcd8897b37921e04aaef71c32225c578e058ced16aaf382bb1232b45592050.png" src="../_images/9fbcd8897b37921e04aaef71c32225c578e058ced16aaf382bb1232b45592050.png" />
+</div>
+</div>
+<p>La matriz de correlación evalúa la asociación lineal entre las dos variables numéricas extraídas de la marca temporal (day y hour_of_day) y la variable objetivo click. La ausencia de correlación lineal significativa entre los atributos temporales y el target confirma que el comportamiento de los clics no sigue una tendencia lineal a lo largo de los días ni de las horas. Asimismo, la baja correlación entre day y hour_of_day descarta problemas de colinealidad directa entre ambas características, justificando el uso de transformaciones adicionales (como codificación cíclica o de rango) para que el Perceptrón Multicapa pueda capturar sus patrones no lineales.</p>
+</section>
+<div class="toctree-wrapper compound">
+</div>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "binder-examples/jupyter-stacks-datascience",
+            ref: "master",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="right-next"
+       href="02_sklearn_mlp.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Modelado con Scikit-Learn</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Introducción al Proyecto: Predicción de Tasa de Clics (CTR) en Publicidad Móvil</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#objetivo-general">Objetivo General</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#objetivos-especificos">Objetivos Especificos</a></li>
+</ul>
+</li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-exploratorio-de-datos">Análisis Exploratorio de Datos</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#descripcion-de-los-campos-principales">Descripción de los campos principales:</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#carga-de-datos">Carga de datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-de-la-variable-de-respuesta-click">Análisis de la variable de respuesta (Click)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#tipos-de-datos">Tipos de Datos</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#identificacion-de-valores-faltantes">Identificación de valores faltantes</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-de-cardinalidad-de-las-variables-categoricas">Análisis de cardinalidad de las variables categóricas</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#transformacion-de-la-variable-hour">Transformación de la variable Hour</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#grafico-de-las-variables-creadas">Gráfico de las variables creadas</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#grafico-de-frecuencia-de-las-principales-variables-categoricas">Gráfico de frecuencia de las principales variables Categóricas</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c16">C16</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c15">C15</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c1">C1</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#banner-pos">banner_pos</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#device-type">device_type</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#c18">C18</a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#device-conn-type">device_conn_type</a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#analisis-de-frecuencia-de-las-demas-variables-categoricas">Análisis de frecuencia de las demás variables Categóricas</a><ul class="nav section-nav flex-column">
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variables-de-alta-cardinalidad-device-ip-device-id-app-id-device-model-site-domain-site-id-c14"><strong>Variables de Alta Cardinalidad (device_ip, device_id, app_id, device_model, site_domain, site_id, C14)</strong></a></li>
+<li class="toc-h3 nav-item toc-entry"><a class="reference internal nav-link" href="#variables-de-media-cardinalidad-app-domain-c17-c20-c19-c21-app-category-site-category"><strong>Variables de Media Cardinalidad (app_domain, C17, C20, C19, C21, app_category, site_category)</strong></a></li>
+</ul>
+</li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#distribucion-de-clics-por-hora-del-dia">Distribución de clics por hora del día</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#matriz-de-correlacion-para-variables-numericas-creadas">Matriz de correlación para variables numéricas creadas</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By Natalia Alvarado y Sergio Rada
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2022.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
